@@ -1,7 +1,10 @@
 package br.gov.caixa.caixaverso.rest;
 
+import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.rest.dto.LoginRequestDTO;
+import br.gov.caixa.caixaverso.rest.dto.RegistroRequestDTO;
 import br.gov.caixa.caixaverso.services.LoginService;
+import br.gov.caixa.caixaverso.services.RegistroService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -18,6 +21,9 @@ public class AuthRest {
     @Inject
     LoginService loginService;
 
+    @Inject
+    RegistroService registroService;
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -25,19 +31,31 @@ public class AuthRest {
     public Response login(
         @Valid
         LoginRequestDTO request
-    ) {
+    ) throws RegraInvalidaException {
         Response.Status status = Response.Status.BAD_REQUEST;
 
-        Object retornoApi;
-        try {
-            retornoApi = loginService.executar(request.cpf(), request.password());
-        } catch (Exception e) {
-            retornoApi = "invalido";
-            throw e;
-        }
+        Object retornoApi = loginService.executar(request.cpf(), request.password());
 
         return Response.status(status)
             .entity(retornoApi)
+            .build();
+    }
+
+    @POST
+    @Path("/cadastro")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    public Response cadastro(
+        @Valid
+        RegistroRequestDTO request
+    ) throws RegraInvalidaException {
+        Response.Status status = Response.Status.BAD_REQUEST;
+
+        var usuario = registroService.executar(request.cpf(), request.password(), request.nome());
+
+        return Response.status(status)
+            .entity(usuario.getCo_id())
             .build();
     }
 }
