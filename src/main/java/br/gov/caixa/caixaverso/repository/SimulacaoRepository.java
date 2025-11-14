@@ -1,6 +1,9 @@
 package br.gov.caixa.caixaverso.repository;
 
+import java.util.List;
+
 import br.gov.caixa.caixaverso.repository.dto.ResultadoPaginadoDTO;
+import br.gov.caixa.caixaverso.repository.dto.SimulacoesAgrupadasPorDiaDTO;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
@@ -23,5 +26,13 @@ public class SimulacaoRepository implements PanacheRepository<SimulacoesModel> {
             count(),
             query.list()
         );
+    }
+
+    public List<SimulacoesAgrupadasPorDiaDTO> agruparPorDia() {
+        var query = getEntityManager().createNamedQuery(
+            "agrupaSimulacoesPorDia",
+            SimulacoesAgrupadasPorDiaDTO.class
+        );
+        return query.getResultList();
     }
 }

@@ -15,7 +15,9 @@ import br.gov.caixa.caixaverso.services.dto.SimulacaoDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @ApplicationScoped
@@ -53,13 +55,13 @@ public class CriarSimulacaoService {
         SimulacoesModel model = new SimulacoesModel();
         model.setCo_usuario_id(dados.clienteId());
         model.setDe_produto(produto.getCo_nome());
-        model.setDt_criacao(LocalDateTime.now());
+        model.setDt_criacao(LocalDate.now());
         model.setNu_prazo_meses(dados.prazoMeses());
         model.setNu_valorInvestido(dados.valor());
         model.setNu_valor_final(progressao.getLast());
         simulacaoRepository.inserir(model);
 
-        String dataAtual = model.getDt_criacao().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+        String dataAtual = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
         return new SimulacaoDTO(produto, dataAtual, progressao, dados.prazoMeses());
     }

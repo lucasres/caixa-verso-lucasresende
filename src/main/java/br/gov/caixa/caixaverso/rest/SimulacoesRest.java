@@ -9,10 +9,13 @@ import br.gov.caixa.caixaverso.services.CriarSimulacaoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("")
@@ -27,8 +30,19 @@ public class SimulacoesRest {
     SimulacaoRepository simulacaoRepository;
 
     @GET
+    @Path("/simulacoes/por-produto-dia")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"User"})
+    public Response listarSimulacoesPorDia() throws RegraInvalidaException {
+        return Response.status(Response.Status.OK)
+            .entity(simulacaoRepository.agruparPorDia())
+            .build();
+    }
+
+    @GET
     @Path("/simulacoes")
     @RolesAllowed({"User"})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response listarSimulacoes(
         @QueryParam("pagina") Integer pagina,
         @QueryParam("quantidade") Integer quantidade
@@ -49,6 +63,8 @@ public class SimulacoesRest {
     @POST
     @Path("/simular-investimento")
     @RolesAllowed({"User"})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response criarSimulacao(
         @Valid
         SimulacaoRequestDTO request

@@ -1,5 +1,6 @@
 package br.gov.caixa.caixaverso.repository.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,6 +21,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NamedQuery(name = "findSimulacoesDoCliente", query = "SELECT s FROM SimulacoesModel s WHERE co_usuario_id = :clientId")
+@NamedQuery(
+    name = "agrupaSimulacoesPorDia",
+    query = "SELECT de_produto, COUNT(1) as quantidadeSimulacoes, dt_criacao as data, AVG(nu_valor_final) as mediaValorFinal FROM SimulacoesModel s GROUP BY de_produto, dt_criacao"
+)
 public class SimulacoesModel extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,5 +54,5 @@ public class SimulacoesModel extends PanacheEntityBase {
 
     @Column(name = "dt_criacao", nullable = false)
     @JsonProperty("dataCriacao")
-    LocalDateTime dt_criacao;
+    LocalDate dt_criacao;
 }
