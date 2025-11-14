@@ -5,13 +5,17 @@ import java.util.List;
 
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
+import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
+import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.rest.dto.SimulacaoRequestDTO;
 import br.gov.caixa.caixaverso.services.dto.SimulacaoDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,6 +26,9 @@ public class CriarSimulacaoService {
 
     @Inject
     UsuariosRepository usuariosRepository;
+
+    @Inject
+    SimulacaoRepository simulacaoRepository;
 
     public SimulacaoDTO executar(SimulacaoRequestDTO dados) throws RegraInvalidaException {
         ProdutoModel produto = produtoRepository.findByTipo(dados.tipoProduto());
@@ -44,7 +51,16 @@ public class CriarSimulacaoService {
             ultimoValor = novoValor;
         }
 
-        String dataAtual = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+        SimulacoesModel model = new SimulacoesModel();
+        model.setCo_usuario_id(dados.clienteId());
+        model.setDe_produto(produto.getCo_nome());
+        model.setDt_criacao(LocalDateTime.now());
+        model.setNu_prazo_meses(dados.prazoMeses());
+        model.setNu_valorInvestido(dados.valor());
+        model.setNu_valor_final(progressao.getLast());
+        simulacaoRepository.inserir(model);
+
+        String dataAtual = model.getDt_criacao().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
         return new SimulacaoDTO(produto, dataAtual, progressao, dados.prazoMeses());
     }

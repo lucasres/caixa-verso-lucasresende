@@ -13,7 +13,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
-@Path("/v1/simulacoes")
+@Path("")
 public class SimulacoesRest {
     @Inject
     JsonWebToken jwt;
@@ -30,6 +30,7 @@ public class SimulacoesRest {
     }
 
     @POST
+    @Path("/simular-investimento")
     @RolesAllowed({"User"})
     public Response criarSimulacao(
         @Valid

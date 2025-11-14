@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.Range;
 
 import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 public record SimulacaoRequestDTO(
     @NotNull
