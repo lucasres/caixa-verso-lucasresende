@@ -2,9 +2,11 @@ package br.gov.caixa.caixaverso.rest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Map;
 
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.TelemetriaRepository;
+import br.gov.caixa.caixaverso.rest.dto.TelemetriaResponseDTO;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -16,7 +18,6 @@ import jakarta.ws.rs.core.Response;
 
 @Path("")
 public class TelemetriaRest {
-
     @Inject
     TelemetriaRepository telemetriaRepository;
 
@@ -38,8 +39,11 @@ public class TelemetriaRest {
             throw new RegraInvalidaException("valor do inicio ou fim inválido: Padrão esperado YYYY-mm-dd");
         }
 
+        var telemetrias = telemetriaRepository.agruparPorPath(inicioParsed, fimParsed);
+        var periodo = Map.of("inicio", inicioParsed.toString(), "fim", fimParsed.toString());
+
         return Response.status(Response.Status.OK)
-            .entity(telemetriaRepository.agruparPorPath(inicioParsed, fimParsed))
+            .entity(new TelemetriaResponseDTO(telemetrias, periodo))
             .build();
     }
 }
