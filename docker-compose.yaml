@@ -1,0 +1,11 @@
+services:
+  app-java:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.dev
+    container_name: caixaverso-java
+    volumes:
+      - ~/.m2:/root/.m2
+      - .:/app
+    ports:
+      - 8080:8080

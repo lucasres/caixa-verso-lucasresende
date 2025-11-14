@@ -1,0 +1,9 @@
+FROM maven:3.9-amazoncorretto-21-alpine
+
+EXPOSE 8080
+
+WORKDIR /app
+
+ENV QUARKUS_HTTP_HOST=0.0.0.0
+
+ENTRYPOINT ["mvn", "quarkus:dev", "-Dhost=0.0.0.0"]
