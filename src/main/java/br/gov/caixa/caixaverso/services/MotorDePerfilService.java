@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jboss.logging.Logger;
+
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
@@ -25,6 +27,9 @@ public class MotorDePerfilService {
 
     @Inject
     UsuariosRepository usuariosRepository;
+
+    @Inject
+    Logger logger = Logger.getLogger(MotorDePerfilService.class);
 
     private Map<String, Integer> riscoValor = Map.of("Baixo", 1, "Medio", 2, "Alto", 3);
     private Map<String, String> perfilDescricao = Map.of(
@@ -83,29 +88,50 @@ public class MotorDePerfilService {
         Integer parteDaMedia = 0;
         // calcula o valor referente ao risco
         Double mediaRiscos = Math.round((somaRiscos / frequenciaMovimentacao) * 100.0) / 100.0;
-        parteDaMedia = (int) (mediaRiscos * 10);
+        parteDaMedia = (int) (mediaRiscos * 33);
         // calcula o valor referente ao volumes investido
         if (volumeInvestido < 10_000) {
-            parteDoValorInvestido = (int) ((volumeInvestido/10_000) * 10.0);
-        } else if (volumeInvestido < 20_000) {
-            parteDoValorInvestido = (int) ((volumeInvestido/20_000) * 10.0 + 10.0);
+            parteDoValorInvestido = (int) ((volumeInvestido/10_000) * 33.0);
+        } else if (volumeInvestido < 100_000) {
+            parteDoValorInvestido = (int) ((volumeInvestido/100_000) * 33.0 + 33.0) ;
         } else {
-            parteDoValorInvestido = 30;
+            parteDoValorInvestido = 99;
         }
         // calculo da frequencia
         if (frequenciaMovimentacao < 3) {
-            parteFrequenciaInvestimento = (int) ((frequenciaMovimentacao/3) * 10.0);
+            parteFrequenciaInvestimento = (int) ((frequenciaMovimentacao/3) * 33.0);
         } else if (frequenciaMovimentacao < 6) {
-            parteFrequenciaInvestimento = (int) ((frequenciaMovimentacao/6) * 10.0 + 10.0);
+            parteFrequenciaInvestimento = (int) ((frequenciaMovimentacao/6) * 33.0 + 33.0);
         } else {
-            parteFrequenciaInvestimento = 30;
+            parteFrequenciaInvestimento = 66;
         }
+
+        int riscoNormalizado = Math.min(parteDaMedia, 100);
+        int volumeNormalizado = Math.min(parteDoValorInvestido, 100);
+        int freqNormalizado = Math.min(parteFrequenciaInvestimento, 100);
+
+        logger.infof("risco %d", riscoNormalizado * 70 / 100);
+        logger.infof("valor %d", volumeNormalizado * 20 / 100);
+        logger.infof("frequencia %d", freqNormalizado * 10 / 100);
+
+        // Pesos
+        int pesoRisco = 7;
+        int pesoVolume = 2;
+        int pesoFrequencia = 1;
+
+        int somaPesos = pesoRisco + pesoVolume + pesoFrequencia;
+
+         double score = (
+                riscoNormalizado * pesoRisco +
+                volumeNormalizado * pesoVolume +
+                freqNormalizado * pesoFrequencia
+        ) / (double) somaPesos;
         
-        return parteDaMedia + parteDoValorInvestido + parteFrequenciaInvestimento;
+        return (int) Math.round(score);
     }
 
     private String pontuacaoParaPerfil(Integer pontuacao) {
-        if (pontuacao < 33) {
+        if (pontuacao < 45) {
             return "Conservador";
         }
 
