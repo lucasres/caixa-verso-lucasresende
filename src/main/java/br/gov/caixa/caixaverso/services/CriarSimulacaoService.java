@@ -42,7 +42,7 @@ public class CriarSimulacaoService {
             throw new RegraInvalidaException("Cliente '" + dados.clienteId() + "' não existe na base");
         }
 
-        var jurosAoMes = produto.getNu_rentabilidade() / 12;
+        var jurosAoMes = anualParaMensal(produto.getNu_rentabilidade());
         var ultimoValor = dados.valor();
         List<Double> progressao = new ArrayList<>();
 
@@ -64,5 +64,9 @@ public class CriarSimulacaoService {
         String dataAtual = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
         return new SimulacaoDTO(produto, dataAtual, progressao, dados.prazoMeses());
+    }
+
+    public double anualParaMensal(double taxaAnual) {
+        return Math.pow(1 + taxaAnual, 1.0 / 12.0) - 1;
     }
 }

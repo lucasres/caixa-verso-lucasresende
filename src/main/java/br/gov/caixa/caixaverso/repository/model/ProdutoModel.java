@@ -16,6 +16,7 @@ import lombok.Getter;
 @Table(name = "produtos")
 @Getter
 @NamedQuery(name = "findByTipo", query = "SELECT p FROM ProdutoModel p WHERE ic_tipo = :tipo")
+@NamedQuery(name = "findAllByRisco", query = "SELECT p FROM ProdutoModel p WHERE ic_risco = :risco")
 public class ProdutoModel extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

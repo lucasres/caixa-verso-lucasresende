@@ -29,8 +29,8 @@ public class ProdutoRest {
         @PathParam("perfil") String perfil
     ) {
         Response.Status status = Response.Status.OK;
-        List<ProdutoModel> produtos = produtoRepository.findAllByTipo(perfil);
-        logger.info("perfil " + perfil);
+        List<ProdutoModel> produtos = produtoRepository.findAllByRisco(perfil);
+        logger.info("perfil passado: " + perfil);
 
         if (produtos.isEmpty()) {
             status = Response.Status.NOT_FOUND;
