@@ -25,6 +25,10 @@ import lombok.Setter;
     name = "agrupaSimulacoesPorDia",
     query = "SELECT de_produto, COUNT(1) as quantidadeSimulacoes, dt_criacao as data, AVG(nu_valor_final) as mediaValorFinal FROM SimulacoesModel s GROUP BY de_produto, dt_criacao"
 )
+@NamedQuery(
+    name = "listarSimulacoesByClienteId",
+    query = "SELECT s FROM SimulacoesModel s WHERE co_usuario_id = :cliente_id"
+)
 public class SimulacoesModel extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

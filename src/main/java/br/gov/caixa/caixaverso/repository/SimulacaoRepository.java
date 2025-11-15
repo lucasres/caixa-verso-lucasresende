@@ -35,4 +35,14 @@ public class SimulacaoRepository implements PanacheRepository<SimulacoesModel> {
         );
         return query.getResultList();
     }
+
+    public List<SimulacoesModel> listarByClienteId(Long clienteId) {
+        var query = getEntityManager().createNamedQuery(
+            "listarSimulacoesByClienteId",
+            SimulacoesModel.class
+        );
+        query.setParameter("cliente_id", clienteId);
+        return query.getResultList();
+    } 
+
 }
