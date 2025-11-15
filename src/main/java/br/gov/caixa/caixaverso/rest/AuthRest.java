@@ -32,7 +32,7 @@ public class AuthRest {
         @Valid
         LoginRequestDTO request
     ) throws RegraInvalidaException {
-        Response.Status status = Response.Status.BAD_REQUEST;
+        Response.Status status = Response.Status.OK;
 
         Object retornoApi = loginService.executar(request.cpf(), request.password());
 

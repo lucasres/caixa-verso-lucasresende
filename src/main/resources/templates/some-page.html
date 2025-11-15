@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="flex justify-center mt-8 mb-16">
+        <p class="text-2xl font-bold">📄 Documentação API - Caixaverso - Lucas Resende</p>
+    </div>
+    <div class="mx-16">
+        <div class="border-l-4 border-red-600 mb-8">
+            <p class="ml-4 text-1xl font-bold">📝 Descrição</p>
+        </div>
+        <div>
+            <p>
+                Olá, essa API foi construída usando <span class="font-bold">Java 21 + Quarkus</span>. Essa é uma documentação interativa feita com tailwind, adicionei ao projeto um template engine para ajudar a criação da documentação, o seu objetivo é melhor demostrar o comportamento da API desenvolvida para o desafio. 
+            </p>
+            <br/>
+            <p>
+                Entretanto, se preferir pode olhar o swagger da API apenas <a href="#" class="text-blue-300 font-bold" target="_blank">clickando aqui</a>.
+            </p>
+        </div>
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">🐋 Ambiente</p>
+        </div>
+        <div>
+            <p>
+                O ambiente foi construído usando docker. Onde temos um <span class="p-px bg-gray-100 text-gray-800 rounded-md font-mono">docker-compose.yaml</span>, que contém a api quarkus com um banco de dados SqlServer, segue um trecho do arquivo e como rodar localmente: 
+            </p>
+            <div class="w-full mx-auto mt-4 flex">
+                <div class="bg-gray-800 text-white p-4 rounded-md flex-1 mr-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400">Code:</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <pre class="text-gray-300">
+                            <code>
+$ cat docker-compose.yaml
+services:
+app-java:
+    build:
+    context: .
+    dockerfile: src/main/docker/Dockerfile.dev
+    ...
+$ docker-compose up
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <img src="/docker-compose.gif">
+                </div>
+            </div>
+        </div>
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">🔒 Autenticação</p>
+        </div>
+        <div>
+            A Autenticação foi implementada usando JWT + RBAC(Role Based Access Control). As principais ROLES são User para usuário comum e Admin para administradores. O JWT gerado contém as duas ROLES. 
+        </div>
+        <div>
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-orange-400 mx-2 method">POST</div>
+                    <div class="flex-1 url">http://localhost:8080/v1/auth</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnLogin">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Body:</span>
+                </div>
+                <pre>
+    {
+        "cpf": "12345678912",
+        "password": "12345678"
+    }
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta
+                </pre>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function (params) {
+        let jwt
+        const btnLogin = document.getElementById("btnLogin")
+
+        btnLogin.addEventListener("click", enviarRequest)
+
+        function enviarRequest(e) {
+            const target = e.target
+            
+            const parent = target.parentElement
+            const url = parent.parentElement
+                .getElementsByClassName("url")[0]
+                .textContent
+            const method = parent.parentElement
+                .getElementsByClassName("method")[0]
+                .textContent
+            const response = parent.parentElement
+                .parentElement
+                .getElementsByClassName("response-text")[0]
+            
+            const headers = {}
+            if (jwt != undefined) {
+                headers["Authorization"] = "Bearer " + jwt
+            }
+            
+            axios.request({
+                method: method,
+                url: url,
+                data: {
+                    cpf: "12345678912",
+                    password: "12345678"
+                },
+                headers: headers
+            }).then((resp) => {
+                if (url.includes("v1/auth")) {
+                    jwt = resp.data.jwt
+                }
+
+                response.textContent = JSON.stringify(resp.data, undefined, 2)
+                parent.parentElement
+                    .parentElement
+                    .getElementsByClassName("sucesso")[0]
+                    .classList.toggle("hiden")
+            }).catch((err) => {
+                console.log(err);
+            })
+        }
+    })
+</script>
+</html>
