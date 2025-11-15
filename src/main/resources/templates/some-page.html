@@ -206,6 +206,44 @@ $ docker-compose up
         </div> <!-- FIM CONTEUDO -->
 
 
+        <!-- LISTAGEM DE SIMULACOES POR DIA -->
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">🗓️ Listagem de simulações por dia</p>
+        </div>
+        <div>
+            A API agrupa as simulações feitas por dia usando <b>JPQL</b>(Java Persistance Query Language), com o intuito de otimizar as consultas, já trazendo os dados tratados do banco.
+        </div>
+        <div class="mt-4">
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-green-400 mx-2 method">GET</div>
+                    <div class="flex-1 url">http://localhost:8080/simulacoes/por-produto-dia</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnListarSimulacaoPorDia">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- HEADERS-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Headers:</span>
+                </div>
+                <pre>
+{
+    "Authorization": Bearer eyJ0eXAiOiJKV1QiLCJhbGci...,
+}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta
+                </pre>
+            </div>
+        </div> <!-- FIM CONTEUDO -->
+
+
     </div> <!-- FIM -->
 </body>
 <script>
@@ -214,6 +252,7 @@ $ docker-compose up
         let paginaListagemSimulacao = 0
         const btnLogin = document.getElementById("btnLogin")
         const btnCriarSimulacao = document.getElementById("btnCriarSimulacao")
+        const btnListarSimulacaoPorDia = document.getElementById("btnListarSimulacaoPorDia")
         const btnListarSimulacao = document.getElementById("btnListarSimulacao")
         const queryPaginaListaSimulacao = document.getElementById("query-pagina")
         const btnRemovePaginaListagemSimulacao = document.getElementById("btnRemovePaginaListagemSimulacao")
@@ -228,6 +267,10 @@ $ docker-compose up
         })
 
         btnListarSimulacao.addEventListener("click", function (e) {
+            enviarRequest(e)
+        })
+
+        btnListarSimulacaoPorDia.addEventListener("click", function (e) {
             enviarRequest(e)
         })
 
@@ -312,7 +355,7 @@ $ docker-compose up
             });
         }
 
-        function mudaPagina(valor) {            
+        function mudaPagina(valor) {
             let novoValor = paginaListagemSimulacao + valor
             queryPaginaListaSimulacao.textContent = novoValor
             paginaListagemSimulacao = novoValor
