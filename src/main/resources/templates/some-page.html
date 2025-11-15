@@ -54,13 +54,14 @@ $ docker-compose up
                 </div>
             </div>
         </div>
+        <!-- AUTENTICACAO -->
         <div class="border-l-4 border-red-600 my-8">
             <p class="ml-4 text-1xl font-bold">🔒 Autenticação</p>
         </div>
         <div>
-            A Autenticação foi implementada usando JWT + RBAC(Role Based Access Control). As principais ROLES são User para usuário comum e Admin para administradores. O JWT gerado contém as duas ROLES. 
+            A Autenticação foi implementada usando <b>JWT + RBAC</b>(Role Based Access Control). As principais ROLES são User para usuário comum e Admin para administradores. O JWT gerado contém as duas ROLES. 
         </div>
-        <div>
+        <div class="mt-4">
             <div>
                 <div class="bg-gray-800 flex items-center rounded-md">
                     <div class="font-bold text-orange-400 mx-2 method">POST</div>
@@ -72,7 +73,7 @@ $ docker-compose up
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-gray-400">Body:</span>
                 </div>
-                <pre>
+                <pre class="payload">
     {
         "cpf": "12345678912",
         "password": "12345678"
@@ -90,21 +91,84 @@ $ docker-compose up
                 </pre>
             </div>
         </div>
-    </div>
+        <!-- SIMULAR -->
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">📊 Simulação de investimento</p>
+        </div>
+        <div>
+            Uma vez autenticado, a api irá selecionar o melhor produto para o usuário.
+        </div>
+        <div class="mt-4">
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-orange-400 mx-2 method">POST</div>
+                    <div class="flex-1 url">http://localhost:8080/simular-investimento</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnCriarSimulacao">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- HEADERS-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Headers:</span>
+                </div>
+                <pre>
+{
+    "Authorization": Bearer eyJ0eXAiOiJKV1QiLCJhbGci...,
+}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- BODY-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Body:</span>
+                </div>
+                <pre class="payload">
+{
+    "clienteId": 1,
+    "valor": 10000,
+    "prazoMeses": 12,
+    "tipoProduto": "CDB"
+}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta
+                </pre>
+            </div>
+        </div> <!-- FIM CONTEUDO -->
+    </div> <!-- FIM -->
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function (params) {
         let jwt
         const btnLogin = document.getElementById("btnLogin")
+        const btnCriarSimulacao = document.getElementById("btnCriarSimulacao")
 
-        btnLogin.addEventListener("click", enviarRequest)
+        btnLogin.addEventListener("click", function (e) {
+            enviarRequest(e)
+        })
 
-        function enviarRequest(e) {
+        btnCriarSimulacao.addEventListener("click", function (e) {
+            enviarRequest(e)
+        })
+
+        function enviarRequest(
+            e,
+            formatResponse = undefined
+        ) {
             const target = e.target
             
             const parent = target.parentElement
             const url = parent.parentElement
                 .getElementsByClassName("url")[0]
+                .textContent
+            const payload = parent.parentElement
+                .parentElement
+                .getElementsByClassName("payload")[0]
                 .textContent
             const method = parent.parentElement
                 .getElementsByClassName("method")[0]
@@ -121,10 +185,7 @@ $ docker-compose up
             axios.request({
                 method: method,
                 url: url,
-                data: {
-                    cpf: "12345678912",
-                    password: "12345678"
-                },
+                data: JSON.parse(payload),
                 headers: headers
             }).then((resp) => {
                 if (url.includes("v1/auth")) {
