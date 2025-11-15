@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-900 text-white">
     <div class="flex justify-center mt-8 mb-16">
@@ -91,12 +92,13 @@ $ docker-compose up
                 </pre>
             </div>
         </div>
+
         <!-- SIMULAR -->
         <div class="border-l-4 border-red-600 my-8">
-            <p class="ml-4 text-1xl font-bold">📊 Simulação de investimento</p>
+            <p class="ml-4 text-1xl font-bold">📊 Listagem de simulações</p>
         </div>
         <div>
-            Uma vez autenticado, a api irá selecionar o melhor produto para o usuário.
+            Com esse endpoints o cliente poderá retornar todos as simulações feitas.
         </div>
         <div class="mt-4">
             <div>
@@ -139,26 +141,108 @@ $ docker-compose up
     Click em "enviar" para obter a resposta
                 </pre>
             </div>
+            <div class="pos-simulacar mt-8">
+                <p class="mb-4">
+                    A API selecionará o melhor investimento baseado no tipo fornecido pelo o usuário. Além de trazer o valor final do investimento, a API também calculará a progressão do valor investido a cada novo mês. Focando na <b>usabilidade</b> para o cliente final, onde tornará o processo mais <b>transparente</b>.
+                </p>
+                <div class="mx-auto">
+                    <canvas id="progressaoSimulacao" width="600"></canvas>
+                </div>
+            </div>
         </div> <!-- FIM CONTEUDO -->
+
+        <!-- LISTAGEM DE SIMULACOES -->
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">✅ Listagem de simulações</p>
+        </div>
+        <div>
+            O cliente poderá chamar a API de listagem de simulações para visualizar todas as simulações geradas. Lembrando que o endpoint é pagina, podendo passar qual pagina está e a quantidade de simulações que devem ser retornadas por página. Se a API retornar vazio, significa que não tem novos dados. 
+        </div>
+        <div class="mt-4">
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-green-400 mx-2 method">GET</div>
+                    <div class="flex-1 url" id="urlListaSimulacao">http://localhost:8080/simulacoes?pagina=0&quantidade=10</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnListarSimulacao">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- QUERY PARAMS-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Query Params:</span>
+                </div>
+                <div class="flex">
+                    <p class="mr-4">Pagina</p>
+                    <div class="flex flex-row mb-2">
+                        <button id="btnRemovePaginaListagemSimulacao">➖</button>
+                        <p class="mx-2" id="query-pagina">0</p>
+                        <button id="btnAddPaginaListagemSimulacao">➕</button>
+                    </div>
+                </div>
+                <div class="flex">
+                    <p class="mr-4">Quantidade</p>
+                    <p class="mr-4">10</p>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- HEADERS-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Headers:</span>
+                </div>
+                <pre>
+{
+    "Authorization": Bearer eyJ0eXAiOiJKV1QiLCJhbGci...,
+}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta
+                </pre>
+            </div>
+        </div> <!-- FIM CONTEUDO -->
+
+
     </div> <!-- FIM -->
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function (params) {
         let jwt
+        let paginaListagemSimulacao = 0
         const btnLogin = document.getElementById("btnLogin")
         const btnCriarSimulacao = document.getElementById("btnCriarSimulacao")
+        const btnListarSimulacao = document.getElementById("btnListarSimulacao")
+        const queryPaginaListaSimulacao = document.getElementById("query-pagina")
+        const btnRemovePaginaListagemSimulacao = document.getElementById("btnRemovePaginaListagemSimulacao")
+        const btnAddPaginaListagemSimulacao = document.getElementById("btnAddPaginaListagemSimulacao")
 
         btnLogin.addEventListener("click", function (e) {
             enviarRequest(e)
         })
 
         btnCriarSimulacao.addEventListener("click", function (e) {
+            enviarRequest(e, undefined, posSucessoSimulacao)
+        })
+
+        btnListarSimulacao.addEventListener("click", function (e) {
             enviarRequest(e)
+        })
+
+        btnRemovePaginaListagemSimulacao.addEventListener("click", function (e) {
+            mudaPagina(-1)
+        })
+
+        btnAddPaginaListagemSimulacao.addEventListener("click", function (e) {
+            mudaPagina(1)
         })
 
         function enviarRequest(
             e,
-            formatResponse = undefined
+            formatResponse = undefined,
+            posSucesso = undefined
         ) {
             const target = e.target
             
@@ -168,8 +252,7 @@ $ docker-compose up
                 .textContent
             const payload = parent.parentElement
                 .parentElement
-                .getElementsByClassName("payload")[0]
-                .textContent
+                .getElementsByClassName("payload")
             const method = parent.parentElement
                 .getElementsByClassName("method")[0]
                 .textContent
@@ -185,7 +268,7 @@ $ docker-compose up
             axios.request({
                 method: method,
                 url: url,
-                data: JSON.parse(payload),
+                data: payload.length != 0 ? JSON.parse(payload[0].textContent) : undefined,
                 headers: headers
             }).then((resp) => {
                 if (url.includes("v1/auth")) {
@@ -197,9 +280,44 @@ $ docker-compose up
                     .parentElement
                     .getElementsByClassName("sucesso")[0]
                     .classList.toggle("hiden")
+
+                if (posSucesso != undefined) {
+                    posSucesso(resp.data)
+                }
+
             }).catch((err) => {
                 console.log(err);
             })
+        }
+
+        function posSucessoSimulacao(data) {
+            const ctx = document.getElementById('progressaoSimulacao');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: data.resultadoSimulacao.progressao.map((_, i) => i + 1 + " mês"),
+                datasets: [{
+                    label: '# Meses',
+                    data: data.resultadoSimulacao.progressao,
+                    borderWidth: 1
+                }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function mudaPagina(valor) {            
+            let novoValor = paginaListagemSimulacao + valor
+            queryPaginaListaSimulacao.textContent = novoValor
+            paginaListagemSimulacao = novoValor
+
+            urlListaSimulacao.textContent = "http://localhost:8080/simulacoes?pagina=" + paginaListagemSimulacao + "&quantidade=10"
         }
     })
 </script>
