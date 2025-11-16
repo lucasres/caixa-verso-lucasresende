@@ -322,61 +322,8 @@ $ docker-compose up
         <div class="border-l-4 border-red-600 my-8">
             <p class="ml-4 text-1xl font-bold">🤖 Produto Recomendado</p>
         </div>
-        <div>
-            A API espera receber um tipo de perfil: <b>Conservador, Moderado ou Agressivo</b>. A API <b>cruza</b> o perfil do cliente para fazer uma recomendação de investimento mais acetiva. Ou seja, se o cliente tem um perfil já calculado como conservador e solicitar uma recomendação de investimento para um perfil moderado, os produtos retornado são tantos de risco baixo pois seu perfil é conservador, como produtos de risco médio, pois o cliente está solicitando um perfil diferente do seu.
-        </div>
         <div class="mt-4">
-            <div>
-                <div class="bg-gray-800 flex items-center rounded-md">
-                    <div class="font-bold text-green-400 mx-2 method">GET</div>
-                    <div class="flex-1 url" id="riscoPathUrl">http://localhost:8080/produtos-recomendados/conservador</div>
-                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnRecomendacao">Enviar</button>
-                </div>
-            </div>
-            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- Path Param-->
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-gray-400">Path Param:</span>
-                </div>
-                <div class="flex">
-                    <p class="mr-4">
-                        Risco:
-                    </p>
-                    <select class="text-gray-900 px-4" id="riscoPathRecomendacao">
-                        <option value="conservador" selected>Conservador</option>
-                        <option value="moderado">Moderado</option>
-                        <option value="agressivo">Agressivo</option>
-                    </select>
-                </div>
-            </div>
-            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- HEADERS-->
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-gray-400">Headers:</span>
-                </div>
-                <pre>
-{
-    "Authorization": Bearer eyJ0eXAiOiJKV1QiLCJhbGci...,
-}
-                </pre>
-            </div>
-            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-gray-400">Resposta:</span>
-                    <span class="text-green-400 hidden sucesso">Sucesso</span>
-                    <span class="text-red-400 hidden falha">Falha</span>
-                </div>
-                <pre class="response-text text-wrap">
-    Click em "enviar" para obter a resposta
-                </pre>
-            </div>
-        </div> <!-- FIM CONTEUDO -->
-
-
-         <!-- GET DO PERFIL DO CLIENTE -->
-        <div class="border-l-4 border-red-600 my-8">
-            <p class="ml-4 text-1xl font-bold">👤 Perfil do cliente</p>
-        </div>
-        <div>
-            A API analisa o histórico da simulações para determinar o perfil de um cliente. A Analise é feita utilizando uma média ponderado, que é exemplificada na tabela abaixo:
+            A API analisa o histórico das simulações para determinar o perfil de um cliente. A Analise é feita utilizando uma média ponderado, que é exemplificada na tabela abaixo:
             <div class="mt-4"></div>
                 <table class="w-full border-collapse border border-gray-700">
                     <thead>
@@ -432,6 +379,88 @@ $ docker-compose up
                     </tbody>
                 </table>
             </div>
+        <div class="mt-4">
+            Após o calculo dos valores acima, a API irá categorizar o perfil do cliente nos seguintes intervalos.
+            <div class="mt-4"></div>
+                <table class="w-full border-collapse border border-gray-700">
+                    <thead>
+                        <tr class="bg-gray-800">
+                            <th class="border border-gray-700 px-4 py-2">Intervalor</th>
+                            <th class="border border-gray-700 px-4 py-2">Perfil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-700 px-4 py-2">Conservador</td>
+                            <td class="border border-gray-700 px-4 py-2">0 até 45</td>
+                        </tr>
+                        <tr class="bg-gray-800">
+                            <td class="border border-gray-700 px-4 py-2">Moderado</td>
+                            <td class="border border-gray-700 px-4 py-2">46 até 66</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-700 px-4 py-2">Agressivo</td>
+                            <td class="border border-gray-700 px-4 py-2">Acima de 66</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <div class="mt-4">
+            Apos isso, API espera receber um tipo de perfil: <b>Conservador, Moderado ou Agressivo</b>. A API <b>cruza</b> o perfil do cliente para fazer uma recomendação de investimento mais acetiva. Ou seja, se o cliente tem um perfil já calculado como conservador e solicitar uma recomendação de investimento para um perfil moderado, os produtos retornado são tantos de risco baixo pois seu perfil é conservador, como produtos de risco médio, pois o cliente está solicitando um perfil diferente do seu.
+        </div>
+        <div class="mt-4">
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-green-400 mx-2 method">GET</div>
+                    <div class="flex-1 url" id="riscoPathUrl">http://localhost:8080/produtos-recomendados/conservador</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnRecomendacao">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- Path Param-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Path Param:</span>
+                </div>
+                <div class="flex">
+                    <p class="mr-4">
+                        Risco:
+                    </p>
+                    <select class="text-gray-900 px-4" id="riscoPathRecomendacao">
+                        <option value="conservador" selected>Conservador</option>
+                        <option value="moderado">Moderado</option>
+                        <option value="agressivo">Agressivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- HEADERS-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Headers:</span>
+                </div>
+                <pre>
+{
+    "Authorization": Bearer eyJ0eXAiOiJKV1QiLCJhbGci...,
+}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta
+                </pre>
+            </div>
+        </div> <!-- FIM CONTEUDO -->
+
+
+         <!-- GET DO PERFIL DO CLIENTE -->
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">👤 Perfil do cliente</p>
+        </div>
+        <div>
+            Como já foi explicado o comportamento do calculo do perfil, recebe o clienteId no Path e retorna as informações do seu perfil.
+        </div>
         <div class="mt-4">
             <div>
                 <div class="bg-gray-800 flex items-center rounded-md">
