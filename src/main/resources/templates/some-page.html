@@ -92,6 +92,9 @@ $ docker-compose up
                 </pre>
             </div>
         </div>
+        <div class="mt-4">
+            <p>Uma autenticado o JWT gerado deve ser no header <b>Authorization</b>.</p>
+        </div>
 
         <!-- SIMULAR -->
         <div class="border-l-4 border-red-600 my-8">
@@ -122,14 +125,14 @@ $ docker-compose up
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-gray-400">Body:</span>
                 </div>
-                <pre class="payload">
+
+                    <textarea class="payload bg-gray-800 w-full h-64">
 {
     "clienteId": 1,
     "valor": 10000,
     "prazoMeses": 12,
     "tipoProduto": "CDB"
-}
-                </pre>
+}</textarea>
             </div>
             <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
                 <div class="flex justify-between items-center mb-2">
@@ -138,14 +141,19 @@ $ docker-compose up
                     <span class="text-red-400 hidden falha">Falha</span>
                 </div>
                 <pre class="response-text text-wrap">
-    Click em "enviar" para obter a resposta
+    Click em "enviar" para obter a resposta, mude os valores para ver novas simulações
                 </pre>
             </div>
-            <div class="pos-simulacar mt-8">
-                <p class="mb-4">
-                    A API selecionará o melhor investimento baseado no tipo fornecido pelo o usuário. Além de trazer o valor final do investimento, a API também calculará a progressão do valor investido a cada novo mês. Focando na <b>usabilidade</b> para o cliente final, onde tornará o processo mais <b>transparente</b>.
-                </p>
-                <div class="mx-auto">
+            <div class="pos-simulacar mt-8 flex">
+                <div class="flex-1">
+                    <p class="mb-4">
+                        A API selecionará o melhor investimento baseado no tipo fornecido pelo o usuário. Além de trazer o valor final do investimento, a API também calculará a progressão do valor investido a cada novo mês. Focando na <b>usabilidade</b> para o cliente final, onde tornará o processo mais <b>transparente</b>. Tornando possível criar gráficos como esse:
+                    </p>
+                    <p class="mt-4">
+                        <b>Sinta-se livre para criar novas simulações mudando o payload enviado.</b>
+                    </p>
+                </div>
+                <div class="mx-auto flex-1">
                     <canvas id="progressaoSimulacao" width="600"></canvas>
                 </div>
             </div>
@@ -280,6 +288,58 @@ $ docker-compose up
             </div>
         </div> <!-- FIM CONTEUDO -->
 
+        <!-- GET DO PRODUTO RECOMENDADO -->
+        <div class="border-l-4 border-red-600 my-8">
+            <p class="ml-4 text-1xl font-bold">🤖 Produto Recomendado</p>
+        </div>
+        <div>
+            A API espera receber um tipo de perfil: Conservador, Moderado ou Agressivo, cruza esses dados com o perfil do cliente para fazer uma recomendação de investimento.
+        </div>
+        <div class="mt-4">
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-green-400 mx-2 method">GET</div>
+                    <div class="flex-1 url" id="riscoPathUrl">http://localhost:8080/produtos-recomendados/conservador</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnRecomendacao">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- Path Param-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Path Param:</span>
+                </div>
+                <div class="flex">
+                    <p class="mr-4">
+                        Risco:
+                    </p>
+                    <select class="text-gray-900 px-4" id="riscoPathRecomendacao">
+                        <option value="Conservador" selected>Conservador</option>
+                        <option value="Moderado">Moderado</option>
+                        <option value="Agressivo">Agressivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- HEADERS-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Headers:</span>
+                </div>
+                <pre>
+{
+    "Authorization": Bearer eyJ0eXAiOiJKV1QiLCJhbGci...,
+}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4"> <!-- RESPONSE-->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta
+                </pre>
+            </div>
+        </div> <!-- FIM CONTEUDO -->
+
 
     </div> <!-- FIM -->
 </body>
@@ -295,13 +355,15 @@ $ docker-compose up
         const queryPaginaListaSimulacao = document.getElementById("query-pagina")
         const btnRemovePaginaListagemSimulacao = document.getElementById("btnRemovePaginaListagemSimulacao")
         const btnAddPaginaListagemSimulacao = document.getElementById("btnAddPaginaListagemSimulacao")
+        const riscoPathRecomendacao = document.getElementById("riscoPathRecomendacao")
+        const btnRecomendacao = document.getElementById("btnRecomendacao")
 
         btnLogin.addEventListener("click", function (e) {
             enviarRequest(e)
         })
 
         btnCriarSimulacao.addEventListener("click", function (e) {
-            enviarRequest(e, undefined, posSucessoSimulacao)
+            enviarRequest(e, undefined, posSucessoSimulacao, formatarPayloadCriacao)
         })
 
         btnListarSimulacao.addEventListener("click", function (e) {
@@ -309,6 +371,10 @@ $ docker-compose up
         })
 
         btnTelemetria.addEventListener("click", function (e) {
+            enviarRequest(e)
+        })
+
+        btnRecomendacao.addEventListener("click", function (e) {
             enviarRequest(e)
         })
 
@@ -324,10 +390,15 @@ $ docker-compose up
             mudaPagina(1)
         })
 
+        riscoPathRecomendacao.addEventListener("change", function (e) {
+            document.getElementById("riscoPathUrl").textContent = "http://localhost:8080/produtos-recomendados/" + e.target.value
+        })
+
         function enviarRequest(
             e,
             formatResponse = undefined,
-            posSucesso = undefined
+            posSucesso = undefined,
+            formatPayload = undefined
         ) {
             const target = e.target
             
@@ -349,11 +420,16 @@ $ docker-compose up
             if (jwt != undefined) {
                 headers["Authorization"] = "Bearer " + jwt
             }
+
+            let data = payload.length != 0 ? JSON.parse(payload[0].textContent) : undefined
+            if (formatPayload != undefined) {
+                data = formatPayload(payload)
+            } 
             
             axios.request({
                 method: method,
                 url: url,
-                data: payload.length != 0 ? JSON.parse(payload[0].textContent) : undefined,
+                data: data,
                 headers: headers
             }).then((resp) => {
                 if (url.includes("v1/auth")) {
@@ -371,29 +447,42 @@ $ docker-compose up
                 }
 
             }).catch((err) => {
-                console.log(err);
+                const resp = err.response
+                if (resp) {
+                    response.textContent = JSON.stringify(resp.data, undefined, 2)
+                }
             })
         }
 
         function posSucessoSimulacao(data) {
             const ctx = document.getElementById('progressaoSimulacao');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
+            
+            // Destroy existing chart instance if it exists
+            if (ctx.chart) {
+            ctx.chart.destroy();
+            }
+
+            // Create a new chart instance and store it in the canvas element
+            ctx.chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
                 labels: data.resultadoSimulacao.progressao.map((_, i) => i + 1 + " mês"),
                 datasets: [{
-                    label: '# Meses',
-                    data: data.resultadoSimulacao.progressao,
-                    borderWidth: 1
+                label: '# Meses',
+                data: data.resultadoSimulacao.progressao,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
                 }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+            },
+            options: {
+                responsive: true,
+                scales: {
+                y: {
+                    beginAtZero: true
                 }
+                }
+            }
             });
         }
 
@@ -403,6 +492,11 @@ $ docker-compose up
             paginaListagemSimulacao = novoValor
 
             urlListaSimulacao.textContent = "http://localhost:8080/simulacoes?pagina=" + paginaListagemSimulacao + "&quantidade=10"
+        }
+
+        function formatarPayloadCriacao(payload) {
+            debugger
+            return JSON.parse(payload[0].value)
         }
     })
 </script>

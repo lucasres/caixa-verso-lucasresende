@@ -46,13 +46,21 @@ public class SimulacoesRest {
     public Response listarSimulacoes(
         @QueryParam("pagina") Integer pagina,
         @QueryParam("quantidade") Integer quantidade
-    ) {
+    ) throws RegraInvalidaException {
         if (pagina == null) {
             pagina = 0;
         }
 
         if (quantidade == null) {
             quantidade = 10;
+        }
+
+        if (pagina < 0) {
+            throw new RegraInvalidaException("O valor da página não pode ser menor que zero");
+        }
+
+        if (quantidade <= 0) {
+            throw new RegraInvalidaException("O valor da quantidade não pode ser menor ou igual a zero");
         }
 
         return Response.status(Response.Status.OK)
