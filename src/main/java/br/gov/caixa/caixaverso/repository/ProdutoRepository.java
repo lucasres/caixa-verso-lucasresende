@@ -14,9 +14,9 @@ public class ProdutoRepository implements PanacheRepository<ProdutoModel> {
         return query.getSingleResultOrNull();
     }
 
-    public List<ProdutoModel> findAllByRisco(String risco) {
-        var query = getEntityManager().createNamedQuery("findAllByRisco", ProdutoModel.class);
-        query.setParameter("risco", risco);
+    public List<ProdutoModel> findByRiscos(List<String> riscos) {
+        var query = getEntityManager().createNamedQuery("findAllByRiscos", ProdutoModel.class);
+        query.setParameter("riscos", riscos);
         return query.getResultList();
     }
 }

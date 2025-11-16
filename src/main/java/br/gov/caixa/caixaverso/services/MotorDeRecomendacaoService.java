@@ -1,0 +1,55 @@
+package br.gov.caixa.caixaverso.services;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.jboss.logging.Logger;
+
+import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
+import br.gov.caixa.caixaverso.repository.ProdutoRepository;
+import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
+import br.gov.caixa.caixaverso.services.dto.RecomendacaoDTO;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class MotorDeRecomendacaoService {
+    @Inject
+    Logger logger = Logger.getLogger(MotorDeRecomendacaoService.class);
+
+    @Inject
+    ProdutoRepository produtoRepository;
+
+    @Inject
+    MotorDePerfilService motorDePerfilService;
+
+    private Map<String, String> perfilRisco = Map.of(
+        "conservador",
+        "baixo",
+        "moderado",
+        "medio",
+        "agressivo",
+        "alto"
+    );
+
+    public RecomendacaoDTO executar(String perfilSolicitado, Long clienteId) throws RegraInvalidaException {
+        var perfilCliente = motorDePerfilService.executar(clienteId);
+        logger.infof("perfil do client %s", perfilCliente.perfil());
+
+        String risco = perfilRisco.get(perfilSolicitado);
+        List<String> riscosAceitados = new ArrayList<>();
+        riscosAceitados.add(risco);
+
+        if (!perfilCliente.perfil().toLowerCase().equals(perfilSolicitado.toLowerCase())) {
+            riscosAceitados.add(perfilRisco.get(perfilCliente.perfil().toLowerCase()));
+        }
+
+        List<ProdutoModel> produtosAceitos = produtoRepository.findByRiscos(riscosAceitados);
+        return new RecomendacaoDTO(
+            perfilCliente.perfil(),
+            riscosAceitados,
+            produtosAceitos
+        );
+    }
+}

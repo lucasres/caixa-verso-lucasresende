@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
+import br.gov.caixa.caixaverso.services.MotorDeRecomendacaoService;
+import br.gov.caixa.caixaverso.services.dto.RecomendacaoDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -20,21 +23,17 @@ public class ProdutoRest {
     Logger logger = Logger.getLogger(ProdutoRest.class);
 
     @Inject
-    ProdutoRepository produtoRepository;
+    MotorDeRecomendacaoService motorDeRecomendacaoService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/produtos-recomendados/{perfil}")
     public Response getDeProduto(
         @PathParam("perfil") String perfil
-    ) {
+    ) throws RegraInvalidaException {
         Response.Status status = Response.Status.OK;
-        List<ProdutoModel> produtos = produtoRepository.findAllByRisco(perfil);
+        RecomendacaoDTO produtos = motorDeRecomendacaoService.executar(perfil, 1L);
         logger.info("perfil passado: " + perfil);
-
-        if (produtos.isEmpty()) {
-            status = Response.Status.NOT_FOUND;
-        }
 
         return Response.status(status)
             .entity(produtos)
