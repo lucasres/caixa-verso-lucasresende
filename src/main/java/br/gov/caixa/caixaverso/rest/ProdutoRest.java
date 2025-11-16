@@ -1,15 +1,12 @@
 package br.gov.caixa.caixaverso.rest;
 
-import java.util.List;
-
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.ProdutoRepository;
-import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.services.MotorDeRecomendacaoService;
-import br.gov.caixa.caixaverso.services.dto.RecomendacaoDTO;
+import io.quarkus.security.UnauthorizedException;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -33,11 +30,16 @@ public class ProdutoRest {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"User"})
     @Path("/produtos-recomendados/{perfil}")
     public Response getDeProduto(
         @PathParam("perfil") String perfil,
         @Context SecurityContext ctx
     ) throws RegraInvalidaException {
+        if (jwt.claim("clienteId") == null) {
+            throw new UnauthorizedException();
+        }
+
         var clienteId = Long.parseLong(jwt.getClaim("clienteId").toString());
         logger.info("perfil passado: " + perfil);
         logger.info("client id: " +  clienteId);
