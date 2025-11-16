@@ -50,12 +50,12 @@ public class AuthRest {
         @Valid
         RegistroRequestDTO request
     ) throws RegraInvalidaException {
-        Response.Status status = Response.Status.BAD_REQUEST;
+        Response.Status status = Response.Status.OK;
 
         var usuario = registroService.executar(request.cpf(), request.password(), request.nome());
 
         return Response.status(status)
-            .entity(usuario.getCo_id())
+            .entity(usuario)
             .build();
     }
 }

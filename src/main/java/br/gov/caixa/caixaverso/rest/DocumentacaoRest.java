@@ -10,12 +10,22 @@ import jakarta.ws.rs.Path;
 @Path("")
 public class DocumentacaoRest {
     @Inject
-    @Location(value = "some-page")
+    @Location(value = "documentacao")
     Template documentacao;
+
+    @Inject
+    @Location(value = "simulacao")
+    Template simulacao;
 
     @Path("/documentacao")
     @GET
     public TemplateInstance  getDocumentacao() {
         return documentacao.instance();
+    }
+
+    @Path("/simulacao")
+    @GET
+    public TemplateInstance simulacao() {
+        return simulacao.instance();
     }
 }

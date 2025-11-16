@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação Caixa Verso - Lucas Resende - Backend Java</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="flex flex-col h-screen">
+        <!-- Menu -->
+        <div class="bg-blue-600 text-white p-4">
+            <p class="text-xl font-bold">Caixa Verso - Lucas Resende - Backend Java</p>
+        </div>
+        <!-- Login and Signup -->
+        <div class="flex-1 bg-gray-100 p-6 hidden" id="formLogin">
+            <h2 class="font-gray-800 text-2xl mb-16">Cadastro</h2>
+            <div class="lg:px-64 md:px-4">
+                <div class="mb-4">
+                        <div class="mx-auto w-xl">
+                        <label for="signupName" class="block text-sm font-medium text-gray-700">Nome</label>
+                        <input type="text" id="signupName" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Informe o seu nome">
+                    </div>
+                    <div class="mb-4">
+                        <label for="signupCpf" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="text" id="signupCpf" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Informe o seu email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="signupPassword" class="block text-sm font-medium text-gray-700">Senha</label>
+                        <input type="password" id="signupPassword" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Entre com sua senha">
+                    </div>
+                    <button id="criarContaForm" type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Criar conta</button>
+                </div>
+            </div>
+        </div>
+        <!-- Content -->
+        <div class="flex flex-1 gap-4 p-4" id="formSistema">
+            <!-- Add your content here -->
+            <div class="w-64 bg-gray-100 p-4 rounded shadow">
+                <div class="mb-8">
+                    <p class="font-bold text-gray-700">Olá, Fulano</p>
+                </div>
+                <div class="flex mb-4 flex-col border-b-2 pb-4">
+                    <p class="font-bold text-gray-700">Seu Perfil é:</p>
+                    <p class="font-bold text-gray-400">Não calculado, realize uma simulação</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-bold text-gray-700">Histórico de simulações</p>
+                </div>
+                <div class="mb-4" id="listaHistorico">
+                    <p class="font-bold text-gray-400">Sem dados disponível</p>
+                </div>
+            </div>
+            <div class="w-72 bg-gray-100 p-4 rounded shadow">
+                <p>Simule agora</p>
+            </div>
+            <div class="flex-1 bg-gray-100 p-4 rounded shadow">
+                <p>Resultado simulação</p>
+            </div>
+        </div>
+    </div>
+    <div id="errorAlert" class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg hidden">
+        <p class="font-bold mb-4">Retorno da API</p>
+        <p id="errorMessage">Error!</p>
+    </div>
+    <div id="successAlert" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg hidden">
+        <p class="font-bold mb-4">Retorno da API</p>
+        <p id="successMensagem">Error!</p>
+    </div>
+</body>
+<script>
+    function showError(message) {
+        const errorAlert = document.getElementById("errorAlert");
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = message;
+        errorAlert.classList.remove("hidden");
+        setTimeout(() => {
+            errorAlert.classList.add("hidden");
+        }, 3000);
+    }
+
+    function showSuccess(message) {
+        const errorAlert = document.getElementById("successAlert");
+        const errorMessage = document.getElementById("successMensagem");
+        errorMessage.textContent = message;
+        errorAlert.classList.remove("hidden");
+        setTimeout(() => {
+            errorAlert.classList.add("hidden");
+        }, 3000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function (params) {
+        let jwt
+        const criarContaForm = document.getElementById("criarContaForm")
+        const signupName = document.getElementById("signupName")
+        const signupPassword = document.getElementById("signupPassword")
+        const signupCpf = document.getElementById("signupCpf")
+        const formLogin = document.getElementById("formLogin")
+        const formSistema = document.getElementById("formSistema")
+
+        criarContaForm.addEventListener("click", function (e) {
+            const data = {
+                nome: signupName.value,
+                password: signupPassword.value,
+                cpf: signupCpf.value,
+            }
+            axios.post("/v1/auth/cadastro", data).then((r) => {
+                jwt = r.data.jwt
+                r.data.jwt = r.data.jwt.substr(0, 10) + "..."
+                showSuccess(JSON.stringify(r.data, undefined, 2))
+                formLogin.classList.add("hidden")
+                formSistema.classList.remove("hidden")
+            }).catch((err) => {
+                showError(JSON.stringify(err.response.data, undefined, 2))
+            })
+        })
+
+    })
+</script>
+</html>

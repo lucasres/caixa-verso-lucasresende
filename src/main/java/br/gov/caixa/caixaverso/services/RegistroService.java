@@ -1,10 +1,15 @@
 package br.gov.caixa.caixaverso.services;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
+import br.gov.caixa.caixaverso.services.dto.LoginDTO;
+import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -13,7 +18,7 @@ public class RegistroService {
     @Inject
     UsuariosRepository usuariosRepository;
 
-    public UsuarioModel executar(String cpf, String pass, String nome) throws RegraInvalidaException {
+    public LoginDTO executar(String cpf, String pass, String nome) throws RegraInvalidaException {
         UsuarioModel usuarioExistente = usuariosRepository.findUsuarioByCpf(cpf);
 
         if (usuarioExistente != null) {
@@ -26,6 +31,14 @@ public class RegistroService {
         model.setNo_nome(nome);
 
         usuariosRepository.inserir(model);
-        return model;
+
+        
+        String token = Jwt.issuer("https://example.com/issuer") 
+                .upn(cpf) 
+                .claim("clienteId", model.getCo_id()) 
+                .groups(new HashSet<>(Arrays.asList("User")))
+                .sign();
+
+        return new LoginDTO(token);
     }
 }
