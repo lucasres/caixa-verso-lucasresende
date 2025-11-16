@@ -6,13 +6,14 @@ import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotBlank;
 
 public record SimulacaoRequestDTO(
-    @NotNull
+    @NotNull()
     Long clienteId,
-    @NotNull
+    @NotNull()
     @Range(min = 1, message = "O valor deve ser maior que 1")
-    Double valor,
+    double valor,
+    @NotNull()
     @Range(min = 1, message = "O prazoMeses deve ser maior que 1")
-    Integer prazoMeses,
+    int prazoMeses,
     @NotBlank(message = "O tipoProduto deve ser um dos seguintes valores: CDB, Debenture ou Ações")
     String tipoProduto
 ) {

@@ -13,6 +13,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -79,6 +80,40 @@ public class SimulacoesRest {
     ) throws RegraInvalidaException {
         return Response.status(Response.Status.CREATED)
             .entity(criarSimulacaoService.executar(request))
+            .build();
+    }
+
+    @GET
+    @Path("/investimentos/{clienteId}")
+    @RolesAllowed({"User"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarSimulacoesCliente(
+        @PathParam("clienteId") String clienteId,
+        @QueryParam("pagina") Integer pagina,
+        @QueryParam("quantidade") Integer quantidade
+    ) throws RegraInvalidaException {
+        if (!clienteId.matches("\\d+")) {
+            throw new RegraInvalidaException("O clienteId deve conter apenas números.");
+        }
+
+        if (pagina == null) {
+            pagina = 0;
+        }
+
+        if (quantidade == null) {
+            quantidade = 10;
+        }
+
+        if (pagina < 0) {
+            throw new RegraInvalidaException("O valor da página não pode ser menor que zero");
+        }
+
+        if (quantidade <= 0) {
+            throw new RegraInvalidaException("O valor da quantidade não pode ser menor ou igual a zero");
+        }
+
+        return Response.status(Response.Status.CREATED)
+            .entity(simulacaoRepository.listarByClienteIdPaginado(Long.parseLong(clienteId), pagina, quantidade))
             .build();
     }
 }

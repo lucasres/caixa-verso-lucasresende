@@ -27,7 +27,11 @@ import lombok.Setter;
 )
 @NamedQuery(
     name = "listarSimulacoesByClienteId",
-    query = "SELECT s FROM SimulacoesModel s WHERE co_usuario_id = :cliente_id"
+    query = "SELECT s FROM SimulacoesModel s WHERE co_usuario_id = :cliente_id ORDER BY co_id ASC"
+)
+@NamedQuery(
+    name = "quantidadeDeSimulacoesCliente",
+    query = "SELECT count(1) FROM SimulacoesModel s WHERE co_usuario_id = :cliente_id"
 )
 public class SimulacoesModel extends PanacheEntityBase {
     @Id

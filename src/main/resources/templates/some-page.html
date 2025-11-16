@@ -16,7 +16,7 @@
         </div>
         <div>
             <p>
-                Olá, essa API foi construída usando <span class="font-bold">Java 21 + Quarkus</span>. Essa é uma documentação interativa feita com tailwind, adicionei ao projeto um template engine para ajudar a criação da documentação, o seu objetivo é melhor demostrar o comportamento da API desenvolvida para o desafio. 
+                Olá, essa API foi construída usando <span class="font-bold">Java 21 + Quarkus</span>. Essa é uma documentação interativa onde todas as vezes que o você apertar em "Enviar", será feita uma requisição com Axios para a API desenvolvida. Adicionei ao projeto um template engine para ajudar a criação da documentação, o seu objetivo é melhor demostrar o comportamento da API desenvolvida para o desafio. 
             </p>
             <br/>
             <p>
@@ -93,7 +93,37 @@ $ docker-compose up
             </div>
         </div>
         <div class="mt-4">
-            <p>Uma autenticado o JWT gerado deve ser no header <b>Authorization</b>.</p>
+            <p>Com o JWT em mão, ele deve ser passado no header <b>Authorization</b>. Ou então, você não conseguiriá se autentiar nos endpoints da API.</p>
+        </div>
+        <div class="mt-4">
+            Lembrando que a API tratará os dados submetidos, então pode tentar mandar valores errados para ver o comportamento dela e se divertir.
+        </div>
+        <div class="mt-4">
+            <div>
+                <div class="bg-gray-800 flex items-center rounded-md">
+                    <div class="font-bold text-orange-400 mx-2 method">POST</div>
+                    <div class="flex-1 url">http://localhost:8080/v1/auth</div>
+                    <button class="bg-blue-800 font-bold p-4 rounded-md" id="btnLoginErrado">Enviar</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Body:</span>
+                </div>
+                <pre class="payload">
+{}
+                </pre>
+            </div>
+            <div class="bg-gray-800 mt-4 font-mono p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Resposta:</span>
+                    <span class="text-green-400 hidden sucesso">Sucesso</span>
+                    <span class="text-red-400 hidden falha">Falha</span>
+                </div>
+                <pre class="response-text text-wrap">
+    Click em "enviar" para obter a resposta do erro da API, e siga em frente na nossa documentação.
+                </pre>
+            </div>
         </div>
 
         <!-- SIMULAR -->
@@ -409,8 +439,13 @@ $ docker-compose up
         const btnPerfil = document.getElementById("btnPerfil")
         const perfilPathUrl = document.getElementById("perfilPathUrl")
         const clientIdPathPerfil = document.getElementById("clientIdPathPerfil")
+        const btnLoginErrado = document.getElementById("btnLoginErrado")
 
         btnLogin.addEventListener("click", function (e) {
+            enviarRequest(e)
+        })
+
+        btnLoginErrado.addEventListener("click", function (e) {
             enviarRequest(e)
         })
 
