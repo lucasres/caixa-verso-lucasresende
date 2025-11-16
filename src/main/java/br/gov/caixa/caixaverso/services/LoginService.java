@@ -27,6 +27,7 @@ public class LoginService {
 
         String token = Jwt.issuer("https://example.com/issuer") 
                 .upn(cpf) 
+                .claim("clienteId", usuario.getCo_id()) 
                 .groups(new HashSet<>(Arrays.asList("User")))
                 .sign();
         return new LoginDTO(token);

@@ -21,9 +21,12 @@ public class ClienteRest {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"User"})
     public Response getRiscoDoClient(
-        @PathParam("clienteId") Long clienteId
+        @PathParam("clienteId") String clienteId
     ) throws RegraInvalidaException {
-        var perfil = motorDePerfilService.executar(clienteId);
+        if (!clienteId.matches("\\d+")) {
+            throw new RegraInvalidaException("O clienteId deve conter apenas números.");
+        }
+        var perfil = motorDePerfilService.executar(Long.parseLong(clienteId));
         return Response.status(Response.Status.OK)
             .entity(perfil)
             .build();

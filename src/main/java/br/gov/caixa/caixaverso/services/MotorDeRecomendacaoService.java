@@ -33,7 +33,7 @@ public class MotorDeRecomendacaoService {
         "alto"
     );
 
-    public RecomendacaoDTO executar(String perfilSolicitado, Long clienteId) throws RegraInvalidaException {
+    public List<ProdutoModel> executar(String perfilSolicitado, Long clienteId) throws RegraInvalidaException {
         var perfilCliente = motorDePerfilService.executar(clienteId);
         logger.infof("perfil do client %s", perfilCliente.perfil());
 
@@ -46,10 +46,6 @@ public class MotorDeRecomendacaoService {
         }
 
         List<ProdutoModel> produtosAceitos = produtoRepository.findByRiscos(riscosAceitados);
-        return new RecomendacaoDTO(
-            perfilCliente.perfil(),
-            riscosAceitados,
-            produtosAceitos
-        );
+        return produtosAceitos;
     }
 }
