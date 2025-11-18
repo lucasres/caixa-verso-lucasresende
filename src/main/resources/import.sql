@@ -4,7 +4,7 @@
 -- insert into myentity (id, field) values(2, 'field-2');
 -- insert into myentity (id, field) values(3, 'field-3');
 -- alter sequence myentity_seq restart with 4;
-INSERT INTO caixaverso.dbo.produtos
+INSERT INTO produtos
 (co_nome, ic_risco, ic_tipo, nu_rentabilidade)
 VALUES(
 'RendaFixa Caixa 2026',
@@ -12,7 +12,7 @@ VALUES(
 'CDB',
 0.12);
 
-INSERT INTO caixaverso.dbo.produtos
+INSERT INTO produtos
 (co_nome, ic_risco, ic_tipo, nu_rentabilidade)
 VALUES(
 'Debenture Empresa XPTO',
@@ -20,7 +20,7 @@ VALUES(
 'Debenture',
 0.18);
 
-INSERT INTO caixaverso.dbo.produtos
+INSERT INTO produtos
 (co_nome, ic_risco, ic_tipo, nu_rentabilidade)
 VALUES(
 'RendaVariavel Fundo XPTO',

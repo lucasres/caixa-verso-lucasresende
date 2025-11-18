@@ -33,8 +33,8 @@ class SimulacaoRestTest {
     void setupUsuario() {
         UsuarioModel usuarioModel = new UsuarioModel();
         usuarioModel.setCo_cpf("aaa123");
-        usuarioModel.setNo_nome("Lucas");
-        usuarioModel.setNo_password("$2a$12$Rh7EcQ3p4OVwc38g7joQse.1wF/e5LDRa6yWXDIKmUykiRn/6Wjfy");
+        usuarioModel.setNo_nome("LucasBB");
+        usuarioModel.setNo_password("$2a$12$Rh7E23fds4OVwc38g7joQse.1wF/e5LDRa6yWXDIKmUykiRn/6Wjfy");
 
         usuariosRepository.inserir(usuarioModel);
         this.usuarioModel = usuarioModel;
