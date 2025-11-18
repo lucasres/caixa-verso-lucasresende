@@ -11,10 +11,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "produtos")
 @Getter
+@Setter
 @NamedQuery(name = "findByTipo", query = "SELECT p FROM ProdutoModel p WHERE ic_tipo = :tipo")
 @NamedQuery(name = "findAllByRiscos", query = "SELECT p FROM ProdutoModel p WHERE ic_risco IN :riscos")
 public class ProdutoModel extends PanacheEntityBase {

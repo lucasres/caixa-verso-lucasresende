@@ -18,7 +18,7 @@ import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 @TestProfile(TesteProfile.class)
-public class TelemetriaRest {
+public class TelemetriaRestTest {
     @Inject
     TelemetriaRepository telemetriaRepository;
 
