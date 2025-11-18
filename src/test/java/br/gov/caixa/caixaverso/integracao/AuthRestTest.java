@@ -20,6 +20,8 @@ public class AuthRestTest {
     @Inject
     UsuariosRepository usuariosRepository;
 
+    UsuarioModel usuarioModel;
+
     @Transactional
     void setup() {
         UsuarioModel usuarioModel = new UsuarioModel();
@@ -28,6 +30,12 @@ public class AuthRestTest {
         usuarioModel.setNo_password("$2a$12$Rh7EcQ3p4OVwc38g7joQse.1wF/e5LDRa6yWXDIKmUykiRn/6Wjfy");
 
         usuariosRepository.inserir(usuarioModel);
+        this.usuarioModel = usuarioModel;
+    }
+
+    @Transactional
+    void down() {
+        usuarioModel.delete();
     }
 
     @Test
@@ -41,6 +49,7 @@ public class AuthRestTest {
             .post("/v1/auth")
             .then()
             .statusCode(200);
+        down();
     }
 
     @Test
@@ -52,5 +61,19 @@ public class AuthRestTest {
             .post("/v1/auth/cadastro")
             .then()
             .statusCode(200);
+    }
+
+        @Test
+    void test_Falhar_Logar() {
+        setup();
+
+        RestAssured.given()
+            .body(new LoginRequestDTO("11223456789", "123456781111"))
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .post("/v1/auth")
+            .then()
+            .statusCode(400);
+        down();
     }
 }

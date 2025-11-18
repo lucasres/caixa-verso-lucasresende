@@ -111,5 +111,17 @@ class SimulacaoRestTest {
             .get("/investimentos/" + usuarioModel.getCo_id())
             .then()
             .statusCode(200);
+        tearDownSimular();
+    }
+
+    @Test
+    @TestSecurity(user = "123", roles = {"User"})
+    void test_Falha_Listar_Simulacoes_Por_Cliente() {
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .get("/investimentos/aaa")
+            .then()
+            .statusCode(400);
     }
 }

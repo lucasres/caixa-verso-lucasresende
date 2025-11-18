@@ -26,4 +26,16 @@ class ClienteRestTest extends BaseTeste {
             .statusCode(200);
         tearDownPerfil();
     }
+
+    @Test
+    @TestSecurity(user = "b", roles = {"User"})
+    void test_Falha_Calcular_Perfil() {
+        RestAssured.given()
+            .body(new LoginRequestDTO("11223456789", "12345678"))
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .get("/perfil-risco/2000000")
+            .then()
+            .statusCode(400);
+    }
 }

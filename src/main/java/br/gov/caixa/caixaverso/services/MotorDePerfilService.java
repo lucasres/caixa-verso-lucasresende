@@ -13,6 +13,7 @@ import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
+import br.gov.caixa.caixaverso.services.Enum.PerfilEnum;
 import br.gov.caixa.caixaverso.services.dto.PerfilClienteDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -33,11 +34,11 @@ public class MotorDePerfilService {
 
     private Map<String, Integer> riscoValor = Map.of("Baixo", 1, "Medio", 2, "Alto", 3);
     private Map<String, String> perfilDescricao = Map.of(
-        "Conservador",
+        PerfilEnum.CONSERVADOR,
         "Baixa movimentação, foco em liquidez",
-        "Moderado",
+        PerfilEnum.MODERADO,
         "Equilíbrio entre liquidez e rentabilidade",
-        "Agressivo",
+        PerfilEnum.AGRESSIVO,
         "Busca por alta rentabilidade, maior risco"
     );
 
@@ -132,13 +133,13 @@ public class MotorDePerfilService {
 
     private String pontuacaoParaPerfil(Integer pontuacao) {
         if (pontuacao < 45) {
-            return "Conservador";
+            return PerfilEnum.CONSERVADOR;
         }
 
         if (pontuacao < 66) {
-            return "Moderado";
+            return PerfilEnum.MODERADO;
         }
 
-        return "Agressivo";
+        return PerfilEnum.AGRESSIVO;
     }
 }

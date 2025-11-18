@@ -37,13 +37,7 @@ public class BaseTeste {
 
         Mockito.when(jwt.getClaim("clienteId")).thenReturn(usuarioModel.getCo_id());
 
-        SimulacoesModel simulacoesModel = new SimulacoesModel();
-        simulacoesModel.setCo_usuario_id((long) usuarioModel.getCo_id());
-        simulacoesModel.setDe_produto("RendaFixa Caixa 2026");
-        simulacoesModel.setNu_valorInvestido(1000.0);
-        simulacoesModel.setNu_valor_final(1200.0);
-        simulacoesModel.setNu_prazo_meses(12);
-        simulacoesModel.setDt_criacao(LocalDate.now());
+        SimulacoesModel simulacoesModel = criarSimulacao((long) usuarioModel.getCo_id());
         simulacaoRepository.inserir(simulacoesModel);
 
 
@@ -53,5 +47,16 @@ public class BaseTeste {
     @Transactional
     void tearDownPerfil() {
         usuarioModel.delete();
+    }
+
+    public SimulacoesModel criarSimulacao(Long cliente) {
+        SimulacoesModel simulacoesModel = new SimulacoesModel();
+        simulacoesModel.setCo_usuario_id(cliente);
+        simulacoesModel.setDe_produto("RendaFixa Caixa 2026");
+        simulacoesModel.setNu_valorInvestido(1000.0);
+        simulacoesModel.setNu_valor_final(1200.0);
+        simulacoesModel.setNu_prazo_meses(12);
+        simulacoesModel.setDt_criacao(LocalDate.now());
+        return simulacoesModel;
     }
 }
