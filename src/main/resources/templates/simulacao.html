@@ -15,7 +15,7 @@
             <p class="text-xl font-bold">Caixa Verso - Lucas Resende - Backend Java</p>
         </div>
         <!-- Login and Signup -->
-        <div class="flex-1 bg-gray-100 p-6 hidden" id="formLogin">
+        <div class="flex-1 bg-gray-100 p-6" id="formLogin">
             <h2 class="font-gray-800 text-2xl mb-16">Cadastro</h2>
             <div class="lg:px-64 md:px-4">
                 <div class="mb-4">
@@ -36,7 +36,7 @@
             </div>
         </div>
         <!-- Content -->
-        <div class="flex flex-1 gap-4 p-4" id="formSistema">
+        <div class="flex flex-1 gap-4 p-4 hidden" id="formSistema">
             <!-- Add your content here -->
             <div class="w-64 bg-gray-100 p-4 rounded shadow">
                 <div class="mb-8">
@@ -44,7 +44,7 @@
                 </div>
                 <div class="flex mb-4 flex-col border-b-2 pb-4">
                     <p class="font-bold text-gray-700">Seu Perfil é:</p>
-                    <p class="font-bold text-gray-400">Não calculado, realize uma simulação</p>
+                    <p class="font-bold text-gray-400" id="idPerfil">Não calculado, realize uma simulação</p>
                 </div>
                 <div class="mb-4">
                     <p class="font-bold text-gray-700">Histórico de simulações</p>
@@ -54,10 +54,60 @@
                 </div>
             </div>
             <div class="w-72 bg-gray-100 p-4 rounded shadow">
-                <p>Simule agora</p>
+                <p class="font-bold text-gray-700">Crie uma simulação</p>
+                <div>
+                    <div>
+                        <label for="idValorInv" class="block text-sm font-medium text-gray-700">Valor</label>
+                        <input type="text" id="idValorInv" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Informe o valor, somente números">
+                    </div>
+                    <div>
+                        <label for="idTipo" class="block text-sm font-medium text-gray-700">Tipo</label>
+                        <select id="idTipo" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                            <option value="CDB">
+                                CDB
+                            </option>
+                            <option value="Debenture">
+                                Debenture
+                            </option>
+                            <option value="Ações"> 
+                                Ações
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="idPrazoMeses" class="block text-sm font-medium text-gray-700">Prazo</label>
+                        <input type="text" id="idPrazoMeses" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Informe o prazo, somente números">
+                    </div>
+                    <div>
+                        <label for="idClienteId" class="block text-sm font-medium text-gray-700">Cliente Id</label>
+                        <input type="text" id="idClienteId" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Informe o valor, somente números">
+                    </div>
+                    <div class="mt-4">
+                        <button id="criarSimulacao" type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Simular</button>
+                    </div>
+                </div>
+                <div class="mb-4"></div>
+                <div class="border-b-2"></div>
+                <div class="mt-4">
+                    <p class="font-bold text-gray-700 mb-4">Produtos Recomendados</p>
+                    <div class="">
+                        <p class="font-bold text-gray-400">Sem dados disponível</p>
+                    </div>
+                </div>
             </div>
             <div class="flex-1 bg-gray-100 p-4 rounded shadow">
-                <p>Resultado simulação</p>
+                <p class="font-bold text-gray-700">Resultado da simulação</p>
+                <div class="hidden" id="retornoSim">
+                    <div class="flex flex-col my-4">
+                        <p class="text-2xl font-bold" id="retornoSimNome">Nome Produto</p>
+                        <p class="" id="retornoSimRisco">Risco Baixo</p>
+                    </div>
+                    <div class="flex w-full">
+                        <p class="flex-1 font-2xl font-bold" id="retornoSimValorInv">Valor investido: </p>
+                        <p class="flex-1 font-2xl font-bold" id="retornoSimValorRet">Valor retornado: </p>
+                    </div>
+                    <canvas id="ctxSimulacao"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -93,12 +143,25 @@
 
     document.addEventListener("DOMContentLoaded", function (params) {
         let jwt
+        let jwtDecoded
+        let clienteId
         const criarContaForm = document.getElementById("criarContaForm")
         const signupName = document.getElementById("signupName")
         const signupPassword = document.getElementById("signupPassword")
         const signupCpf = document.getElementById("signupCpf")
         const formLogin = document.getElementById("formLogin")
         const formSistema = document.getElementById("formSistema")
+        const criarSimulacao = document.getElementById("criarSimulacao")
+        const idValorInv = document.getElementById("idValorInv")
+        const idTipo = document.getElementById("idTipo")
+        const idPrazoMeses = document.getElementById("idPrazoMeses")
+        const idClienteId = document.getElementById("idClienteId")
+        const retornoSim = document.getElementById("retornoSim")
+        const retornoSimNome = document.getElementById("retornoSimNome")
+        const retornoSimRisco = document.getElementById("retornoSimRisco")
+        const retornoSimValorRet = document.getElementById("retornoSimValorRet")
+        const retornoSimValorInv = document.getElementById("retornoSimValorInv")
+        const idPerfil = document.getElementById("idPerfil")
 
         criarContaForm.addEventListener("click", function (e) {
             const data = {
@@ -112,11 +175,110 @@
                 showSuccess(JSON.stringify(r.data, undefined, 2))
                 formLogin.classList.add("hidden")
                 formSistema.classList.remove("hidden")
+                jwtDecoded = decodeJwt(jwt)
+                clienteId = jwtDecoded.payload.clienteId
+                idClienteId.value = clienteId
             }).catch((err) => {
                 showError(JSON.stringify(err.response.data, undefined, 2))
             })
         })
 
+        criarSimulacao.addEventListener('click', function (e) {
+            const data = {
+                clienteId: idClienteId.value,
+                prazoMeses: idPrazoMeses.value,
+                tipoProduto: idTipo.value,
+                valor: idValorInv.value,
+            }
+            const header = {
+                Authorization: "Bearer " + jwt
+            }
+            axios.post("/simular-investimento", data, { headers: header }).then((r) => {
+                showSuccess(JSON.stringify(r.data, undefined, 2))
+                showGraficoSimulacao(r.data)
+                if (retornoSim.classList.contains("hidden")) {
+                    retornoSim.classList.toggle("hidden")
+                }
+
+                retornoSimNome.textContent = r.data.produtoValidado.nome
+                retornoSimRisco.textContent = "Risco " + r.data.produtoValidado.risco
+                retornoSimValorInv.textContent = "Valor investido: " + data.valor
+                retornoSimValorRet.textContent = "Valor retornado: " + r.data.resultadoSimulacao.valorFinal
+
+                getPerfil()
+            }).catch((err) => {
+                showError(JSON.stringify(err.response.data, undefined, 2))
+            })
+        })
+
+        function showGraficoSimulacao(data) {
+            const ctx = document.getElementById('ctxSimulacao');
+            
+            // Destroy existing chart instance if it exists
+            if (ctx.chart) {
+            ctx.chart.destroy();
+            }
+
+            // Create a new chart instance and store it in the canvas element
+            ctx.chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.resultadoSimulacao.progressao.map((_, i) => i + 1 + " mês"),
+                datasets: [{
+                label: '# Meses',
+                data: data.resultadoSimulacao.progressao,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                }
+            }
+            });
+        }
+
+        function getPerfil() {
+            const header = {
+                Authorization: "Bearer " + jwt
+            }
+            axios.get("/perfil-risco/" + clienteId, { headers: header })
+                .then((r) => {
+                    idPerfil.textContent = r.data.perfil + ", pontuação " + r.data.pontuacao
+                })
+        }
+
+        function decodeJwt(token) {
+            const parts = token.split('.');
+            if (parts.length !== 3) {
+                throw new Error("Invalid JWT format: Token must have 3 parts separated by dots.");
+            }
+
+            const headerEncoded = parts[0];
+            const payloadEncoded = parts[1];
+
+            // Helper function to decode Base64Url
+            function base64UrlDecode(str) {
+                let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+                switch (base64.length % 4) {
+                case 0: break;
+                case 2: base64 += '=='; break;
+                case 3: base64 += '='; break;
+                default: throw new Error('Illegal base64url string!');
+                }
+                return atob(base64);
+            }
+
+            const header = JSON.parse(base64UrlDecode(headerEncoded));
+            const payload = JSON.parse(base64UrlDecode(payloadEncoded));
+
+            return { header, payload };
+        }
     })
 </script>
 </html>
