@@ -12,18 +12,16 @@ import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 @TestProfile(TesteProfile.class)
-public class ProdutoRestTest extends BaseTeste {
-
+class ClienteRestTest extends BaseTeste {
     @Test
-    @TestSecurity(user = "123", roles = {"User"})
-    void test_Conseguiu_Recuperar_Perfil() {
+    @TestSecurity(user = "a", roles = {"User"})
+    void test_Conseguiu_Calcular_Perfil() {
         setupPerfil();
-
         RestAssured.given()
             .body(new LoginRequestDTO("11223456789", "12345678"))
             .header("Content-Type",MediaType.APPLICATION_JSON)
             .when()
-            .get("/produtos-recomendados/Conservador")
+            .get("/perfil-risco/" + usuarioModel.getCo_id())
             .then()
             .statusCode(200);
         tearDownPerfil();

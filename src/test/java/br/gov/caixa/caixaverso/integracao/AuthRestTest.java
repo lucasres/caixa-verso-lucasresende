@@ -1,6 +1,5 @@
 package br.gov.caixa.caixaverso.integracao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import br.gov.caixa.caixaverso.profile.TesteProfile;
@@ -8,11 +7,8 @@ import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.rest.dto.LoginRequestDTO;
 import br.gov.caixa.caixaverso.rest.dto.RegistroRequestDTO;
-import br.gov.caixa.caixaverso.services.LoginService;
-import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.quarkus.test.junit.main.QuarkusMainTest;
 import io.restassured.RestAssured;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -31,7 +27,6 @@ public class AuthRestTest {
         usuarioModel.setNo_nome("Lucas");
         usuarioModel.setNo_password("$2a$12$Rh7EcQ3p4OVwc38g7joQse.1wF/e5LDRa6yWXDIKmUykiRn/6Wjfy");
 
-        // Mockito.when(usuariosRepository.findUsuarioByCpf("123")).thenReturn(usuarioModel);
         usuariosRepository.inserir(usuarioModel);
     }
 
