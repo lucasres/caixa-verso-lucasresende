@@ -112,7 +112,7 @@ public class SimulacoesRest {
             throw new RegraInvalidaException("O valor da quantidade não pode ser menor ou igual a zero");
         }
 
-        return Response.status(Response.Status.CREATED)
+        return Response.status(Response.Status.OK)
             .entity(simulacaoRepository.listarByClienteIdPaginado(Long.parseLong(clienteId), pagina, quantidade))
             .build();
     }

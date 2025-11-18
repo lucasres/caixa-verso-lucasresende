@@ -30,7 +30,7 @@ class SimulacaoRestTest {
     private String tipo = "CDB";
 
     @Transactional
-    void setupSimular() {
+    void setupUsuario() {
         UsuarioModel usuarioModel = new UsuarioModel();
         usuarioModel.setCo_cpf("aaa123");
         usuarioModel.setNo_nome("Lucas");
@@ -38,6 +38,11 @@ class SimulacaoRestTest {
 
         usuariosRepository.inserir(usuarioModel);
         this.usuarioModel = usuarioModel;
+    }
+
+    @Transactional
+    void setupSimular() {
+        setupUsuario();
 
         var prod = produtoRepository.findByTipo(tipo);
         if (prod == null) {
@@ -81,6 +86,29 @@ class SimulacaoRestTest {
             .header("Content-Type",MediaType.APPLICATION_JSON)
             .when()
             .get("/simulacoes")
+            .then()
+            .statusCode(200);
+    }
+
+    @Test
+    @TestSecurity(user = "123", roles = {"User"})
+    void test_Conseguiu_Listar_Simulacoes_Por_Dia() {
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .get("/simulacoes/por-produto-dia")
+            .then()
+            .statusCode(200);
+    }
+
+    @Test
+    @TestSecurity(user = "123", roles = {"User"})
+    void test_Conseguiu_Listar_Simulacoes_Por_Cliente() {
+        setupUsuario();
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .get("/investimentos/" + usuarioModel.getCo_id())
             .then()
             .statusCode(200);
     }
