@@ -42,7 +42,7 @@ public class MotorDeRecomendacaoService {
         riscosAceitados.add(risco);
 
         if (!perfilCliente.perfil().toLowerCase().equals(perfilSolicitado.toLowerCase())) {
-            riscosAceitados.add(perfilRisco.get(perfilCliente.perfil().toLowerCase()));
+            riscosAceitados.add(perfilRisco.get(perfilCliente.perfil()));
         }
 
         List<ProdutoModel> produtosAceitos = produtoRepository.findByRiscos(riscosAceitados);

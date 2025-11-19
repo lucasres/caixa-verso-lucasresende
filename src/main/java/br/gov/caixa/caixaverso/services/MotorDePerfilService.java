@@ -49,6 +49,10 @@ public class MotorDePerfilService {
         }
 
         var simulacoes = simulacaoRepository.listarByClienteId(clienteId);
+        if (simulacoes.isEmpty()) {
+            throw new RegraInvalidaException("Para poder ter um perfil, primeiro faça uma simulação");
+        }
+
         var produtos = getProdutoRisco();
 
         Integer somaRiscos = 0;
