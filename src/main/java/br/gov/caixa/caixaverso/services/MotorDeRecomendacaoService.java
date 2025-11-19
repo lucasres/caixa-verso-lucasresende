@@ -9,6 +9,7 @@ import org.jboss.logging.Logger;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
+import br.gov.caixa.caixaverso.services.Enum.PerfilEnum;
 import br.gov.caixa.caixaverso.services.dto.RecomendacaoDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,12 +26,12 @@ public class MotorDeRecomendacaoService {
     MotorDePerfilService motorDePerfilService;
 
     private Map<String, String> perfilRisco = Map.of(
-        "conservador",
-        "baixo",
-        "moderado",
-        "medio",
-        "agressivo",
-        "alto"
+        PerfilEnum.CONSERVADOR,
+        "Baixo",
+        PerfilEnum.MODERADO,
+        "Medio",
+        PerfilEnum.AGRESSIVO,
+        "Alto"
     );
 
     public List<ProdutoModel> executar(String perfilSolicitado, Long clienteId) throws RegraInvalidaException {

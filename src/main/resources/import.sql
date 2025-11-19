@@ -27,3 +27,10 @@ VALUES(
 'Alto',
 'Ações',
 0.22);
+
+INSERT INTO users
+(no_nome, co_cpf, no_password)
+VALUES(
+'Lucas Resende',
+'12345678912',
+'$2a$12$nEQJJPfeXSwP6skJaW.hmOwN6VxEhdc.UEDYKnWBNoVgahTrsvpy2');
