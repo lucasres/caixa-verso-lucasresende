@@ -241,3 +241,132 @@ headers:
 ### Exemplo de execução
 
 ![Exemplo de criacao de simulacao](src/main/resources/META-INF/resources/sim-por-dia.gif)
+
+
+# 👨‍💼 Perfil do cliente
+
+O cálculo da pontuação do perfil do cliente leva em consideração o histórico de investimento que ele realizou. O calcul consistem em uma média ponderada, onde temos 3 tipos de pesos: **risco**, **freqencia** e **valor investido**.
+
+Para a frequência e valor investido, existem 3 faixas que vão receber o valor propocional dentro de sua faixa. 
+
+O valor de cada peso e suas faixas, pode, ser configurado alterando as variáveis de ambientes, e estão disponíveis na tabela a baixo:
+
+| Nome        | Descrição                                            | Intervalo  |  Peso(Valor padrão) |
+|-------------|------------------------------------------------------|------------|---------------------|
+| Risco       | Média do risco de todos investimentos * 33           | 0 - 99     |  7                  |
+|             | Baixo = 1                                            |            |                     |
+|             | Médio = 2                                            |            |                     |
+|             | Alto  = 3                                            |            |                     |
+| Valor       | Somatório de todas os investimento                   |            |  2                  |
+|             | Faixa 1 - 0 até R$ 10.000                            | 0 - 33     |                     |
+|             | Faixa 2 - R$ 10.000 até R$ 100.000                   | 33 - 66    |                     |
+|             | Faixa 3 - Acima de R$ 100.001                        | 100        |                     |
+| Frequência  | Quanto maior a frequência maior o valor              |            |  1                  |
+|             | Faixa 1 - 0 até 3                                    | 0 - 33     |                     |
+|             | Faixa 2 - 3 até 6                                    | 0 - 66     |                     |
+|             | Faixa 3 - Acima de 6                                 | 100        |                     |
+| Total       |                                                      |            |  10                 |
+
+Exemplo de um cáculo:
+
+Um cliente que tem 3 investimento de risco Alto, cada um com 10.000 investido, vai ter o seguinte cálculo de pontuação:
+```
+Média de risco: (3 + 3 + 3 / 3) => 3
+Frequência: 3
+Valor: 10.000 + 10.000 + 10.000 => 30.000
+
+Aplicando os intervalos
+Intervalor peso: 3 * 33 = 99
+Intervalor frequência - Faixa 1: (3/3) * 33 => 33 
+Intervalor valor investido - Faixa 2: (30.000/100.000 * 33) + 33 (Faixa anterior) => 43
+
+Aplicando os pesos:
+((99 * 7) + (33 * 1) + (43 * 2))/10 => 81
+
+```
+
+Após ser calculado a pontuação o cliente é enquadrado em uma das seguintes faixas:
+
+| Nome        | Descrição                                            |
+|-------------|------------------------------------------------------|
+| Conservador | Até 45                                               |
+| Moderado    | Até 66                                               |
+| Agressivo   | Acima de 66                                          |
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/perfil-risco/{clienteId}
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
+```
+
+**Retorno do perfil**:
+
+```json
+{
+    "clienteId": 1,
+    "perfil": "Agressivo",
+    "pontuacao": 81,
+    "descricao": "Busca por alta rentabilidade, maior risco"
+}
+```
+
+### Exemplo de execução
+
+![Exemplo do perfil do cliente](src/main/resources/META-INF/resources/perfil-cliente.gif)
+
+Se quiser pode configurar novos pesos e novas faixas de pontuação, criando as seguintes variaveis de ambientes:
+
+| Variável             | Descrição                          | Exemplo               |
+|----------------------|------------------------------------|-----------------------|
+| `PESO_RISCO`         | Valor do peso do risco             | `3` padrão(7)         |
+| `PESO_FREQ`          | Valor do peso da frequência        | `2` padrão(2)         |
+| `FAIXA_CONSERVADOR`  | Limite da faixa de conservador     | `33` padrão(45)       |
+| `FAIXA_MODERADO`     | Limite da faixa de moderado        | `66` padrão(66)       |
+
+
+# 👨‍💼 Recomendação de produto
+
+O motor de recomendações, utiliza o mesmo cálculo de perfil, ele recupera o identificador do cliente e calcula o seu perfil, e procuta por um produto segundo o perfil passado.
+
+Exemplo:
+```
+Cliente com perfil: Conservado
+Pede uma recomendação de perfil: Moderado
+Produtos retornados:
+Risco Baixo + Risco Médio
+```
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/produtos-recomendados/{perfil}
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
+```
+
+**Retorno das recomendações**:
+
+```json
+[
+    {
+        "id": 1,
+        "nome": "RendaFixa Caixa 2026",
+        "risco": "Baixo",
+        "tipo": "CDB",
+        "rentabilidade": 0.12
+    },
+    {
+        "id": 2,
+        "nome": "Debenture Empresa XPTO",
+        "risco": "Medio",
+        "tipo": "Debenture",
+        "rentabilidade": 0.18
+    }
+]
+```
+
+### Exemplo de execução
+
+![Exemplo do perfil do cliente](src/main/resources/META-INF/resources/recomendacao.gif)
