@@ -1,87 +1,51 @@
-# lucasresende
+# Desafio CaixaVerso Lucas Resende de Sousa Amaral
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Olá, obrigado por está analisando a minha implementação do desafio do CaixaVerso. As tecnologias usadas para implementar foram:
+* Quarkus
+* Java 21
+* Maven 3.9
+* Qute
+* Mssql
+* H2
+* Smallrye-jwt
+* Mockito
+* JUnit
+* Docker
+* Docker-compose
+* AWS
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+# 📝 Get Start
 
-## Running the application in dev mode
+Você pode seguir este readme para analisar o que foi entregue nesse projeto, porém recomendo que fique até final, onde temos um bônus, além de ter feito a API do desáfio, também de forma a inovar decidi criar um front end onde chama a API desenvolvida para melhor exemplificar as suas funcionalidades.
 
-You can run your application in dev mode that enables live coding using:
+O deploy dessa aplicação foi feito na AWS, pode ser localizado nesse link: (http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao)[http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao]
 
-```shell script
-./mvnw quarkus:dev
+# 🐋 Configurando o ambiente
+
+Para configurar o ambiente, siga os passos abaixo:
+
+1. Certifique-se de ter o Docker e Docker Compose instalados em sua máquina.
+2. Clone o repositorio localmente: 
+```bash
+git clone git@github.com:lucasres/caixa-verso-lucasresende.git
+```
+3. Entre na pasta do projeto e configure suas variaveis de ambiente:
+| Variável         | Descrição                          | Exemplo               |
+|------------------|------------------------------------|-----------------------|
+| `DB_URL`         | Endereço do banco de dados         | `localhost`           |
+| `DB_KIND`        | Especifica o tipo do banco         | `mssql ou h2`         |
+| `DB_USER`        | Usuário do banco de dados          | `sa`                  |
+| `DB_PASSWORD`    | Senha do banco de dados            | `sua_senha`           |
+
+
+
+4. Execute o comando abaixo para iniciar os serviços definidos no arquivo `docker-compose.yml`:
+```bash
+docker-compose up
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+3. Após a execução, você verá os serviços sendo inicializados.
 
-## Packaging and running the application
+### Exemplo de execução:
 
-The application can be packaged using:
-
-```shell script
-./mvnw package
-```
-
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/lucasresende-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Qute Web ([guide](https://quarkiverse.github.io/quarkiverse-docs/quarkus-qute-web/dev/index.html)): Serves Qute templates directly over HTTP.
-- JDBC Driver - H2 ([guide](https://quarkus.io/guides/datasource)): Connect to the H2 database via JDBC
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
-- SmallRye JWT Build ([guide](https://quarkus.io/guides/security-jwt-build)): Create JSON Web Token with SmallRye JWT Build API
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### Qute Web
-
-Qute templates like `some-page.html` served via HTTP automatically by Quarkus from the `src/main/resource/templates/pub` directory. No controllers needed. Once the quarkus app is started visit the generated page at http://localhost:8080/some-page?name=World
-
-[Related guide section...](https://docs.quarkiverse.io/quarkus-qute-web/dev/index.html)
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+![Exemplo de execução do Docker Compose](docker-compose.gif)

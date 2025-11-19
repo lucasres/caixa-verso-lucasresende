@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
@@ -31,6 +32,21 @@ public class MotorDePerfilService {
 
     @Inject
     Logger logger = Logger.getLogger(MotorDePerfilService.class);
+
+    @ConfigProperty(name = "peso-risco")
+    Integer pesoRisco;
+
+    @ConfigProperty(name = "peso-valor-investido")
+    Integer pesoValor;
+
+    @ConfigProperty(name = "peso-frequencia")
+    Integer pesoFrequencia;
+    
+    @ConfigProperty(name = "faixa-conservador")
+    Integer faixaConservador;
+
+    @ConfigProperty(name = "faixa-moderado")
+    Integer faixaModerado;
 
     private Map<String, Integer> riscoValor = Map.of("Baixo", 1, "Medio", 2, "Alto", 3);
     private Map<String, String> perfilDescricao = Map.of(
@@ -115,9 +131,9 @@ public class MotorDePerfilService {
         int volumeNormalizado = Math.min(parteDoValorInvestido, 100);
         int freqNormalizado = Math.min(parteFrequenciaInvestimento, 100);
 
-        logger.infof("risco %d", riscoNormalizado * 70 / 100);
-        logger.infof("valor %d", volumeNormalizado * 20 / 100);
-        logger.infof("frequencia %d", freqNormalizado * 10 / 100);
+        logger.infof("risco %d", riscoNormalizado * pesoRisco / 100);
+        logger.infof("valor %d", volumeNormalizado * pesoValor / 100);
+        logger.infof("frequencia %d", freqNormalizado * pesoFrequencia / 100);
 
         // Pesos
         int pesoRisco = 7;
@@ -136,11 +152,11 @@ public class MotorDePerfilService {
     }
 
     private String pontuacaoParaPerfil(Integer pontuacao) {
-        if (pontuacao < 45) {
+        if (pontuacao < faixaConservador) {
             return PerfilEnum.CONSERVADOR;
         }
 
-        if (pontuacao < 66) {
+        if (pontuacao < faixaModerado) {
             return PerfilEnum.MODERADO;
         }
 
