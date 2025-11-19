@@ -90,27 +90,28 @@
                 <div class="border-b-2"></div>
                 <div class="mt-4">
                     <p class="font-bold text-gray-700 mb-4">Produtos Recomendados</p>
-                    <div class="" id="semRecomendacao">
-                        <p class="font-bold text-gray-400">Sem dados disponível</p>
-                    </div>
                     <div class="flex flex-col" id="prodRecomendacao">
-                        <div>
-                            <label for="idRisco" class="block text-sm font-medium text-gray-700">Selecione um tipo para ver as recomendações</label>
-                            <select id="idRisco" class="mt-1 block w-full p-2 border border-gray-300 rounded">
-                            <option value="CDB">
-                                CDB
-                            </option>
-                            <option value="Debenture">
-                                Debenture
-                            </option>
-                            <option value="Ações"> 
-                                Ações
-                            </option>
-                        </select>
-                        </div>
-                        <div class="mb-2 border-b-2">
-                            <p class="font-bold text-xl">Nome Produto</p>
-                            <p>Risco Baixo</p>
+                        <div class="flex flex-col">
+                            <div>
+                                <label for="idRisco" class="block text-sm font-medium text-gray-700">Selecione um tipo para ver as recomendações</label>
+                                <select id="idRecomendacaoProduto" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+                                    <option>
+                                        Selecione um tipo para ver recomendações
+                                    </option>
+                                    <option value="Conservador">
+                                        Conservador
+                                    </option>
+                                    <option value="Moderado">
+                                        Moderado
+                                    </option>
+                                    <option value="Agressivo"> 
+                                        Agressivo
+                                    </option>
+                                </select>
+                            </div>
+                            <div id="listaRecomendacoes">
+
+                            </div>
                         </div>
                     </div>
                 </div>

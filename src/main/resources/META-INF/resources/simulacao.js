@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", function (params) {
     const retornoSimValorInv = document.getElementById("retornoSimValorInv")
     const idPerfil = document.getElementById("idPerfil")
     const listaHistorico = document.getElementById("listaHistorico")
+    const listaRecomendacoes = document.getElementById("listaRecomendacoes")
+    const idRecomendacaoProduto = document.getElementById("idRecomendacaoProduto")
 
     criarContaForm.addEventListener("click", function (e) {
         const data = {
@@ -88,6 +90,24 @@ document.addEventListener("DOMContentLoaded", function (params) {
         }).catch((err) => {
             showError(JSON.stringify(err.response.data, undefined, 2))
         })
+    })
+
+    idRecomendacaoProduto.addEventListener('change', function (e) {
+         const header = {
+            Authorization: "Bearer " + jwt
+        }
+
+        axios.get('/produtos-recomendados/' + e.target.value, { headers: header })
+            .then(r => {
+                listaRecomendacoes.innerHTML = ""
+                r.data.forEach(element => {
+                    listaRecomendacoes.innerHTML += `<div class="flex flex-col border-b-2 mb-4">
+                        <p class="font-bold text-gray-800 text-2xl">${element.nome}</p>
+                        <p class=""><b>Risco:</b>${element.risco}</p>
+                        <p class=""><b>Rentabilidade:</b> ${element.rentabilidade * 100}% a.a</p>
+                    </div>`
+                });
+            })
     })
 
     function showGraficoSimulacao(data) {
