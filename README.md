@@ -127,6 +127,10 @@ Para criar uma simulação faça a seguinte request:
 
 ```
 POST http://ec2-98-84-174-176.compute-1.amazonaws.com/simular-investimento
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
 body:
 {
     "clienteId": 1,
@@ -201,3 +205,39 @@ headers:
 ### Exemplo de execução
 
 ![Exemplo de criacao de simulacao](src/main/resources/META-INF/resources/listagem-sim.gif)
+
+
+# 🗓️ Listar SImulações por produto por dia
+
+A API de listagem de simulações por dia, agrupará os dados por dia, trazendo a quantidade de produtos naquele dia para aquele tipo de produto
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/simulacoes/por-produto-dia
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
+```
+
+**Retorno da listagem**:
+
+```json
+[
+    {
+        "nome": "RendaFixa Caixa 2026",
+        "quantidadeSimulacoes": 3,
+        "data": "2025-11-19",
+        "mediaValorFinal": 1092.83
+    },
+    {
+        "nome": "RendaVariavel Fundo XPTO",
+        "quantidadeSimulacoes": 1,
+        "data": "2025-11-19",
+        "mediaValorFinal": 1068.53
+    }
+]
+```
+
+### Exemplo de execução
+
+![Exemplo de criacao de simulacao](src/main/resources/META-INF/resources/sim-por-dia.gif)

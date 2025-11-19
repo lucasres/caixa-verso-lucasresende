@@ -23,7 +23,7 @@ import lombok.Setter;
 @NamedQuery(name = "findSimulacoesDoCliente", query = "SELECT s FROM SimulacoesModel s WHERE co_usuario_id = :clientId")
 @NamedQuery(
     name = "agrupaSimulacoesPorDia",
-    query = "SELECT de_produto, COUNT(1) as quantidadeSimulacoes, dt_criacao as data, AVG(nu_valor_final) as mediaValorFinal FROM SimulacoesModel s GROUP BY de_produto, dt_criacao"
+    query = "SELECT de_produto as nome, COUNT(1) as quantidadeSimulacoes, dt_criacao as data, AVG(nu_valor_final) as mediaValorFinal FROM SimulacoesModel s GROUP BY de_produto, dt_criacao"
 )
 @NamedQuery(
     name = "listarSimulacoesByClienteId",
