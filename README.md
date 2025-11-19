@@ -15,6 +15,13 @@ Você pode seguir este readme para analisar o que foi entregue nesse projeto, po
 
 O deploy dessa aplicação foi feito na AWS, pode ser localizado nesse link: [http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao](http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao)
 
+# 🧪 Teste unitário e de Integração
+
+A API está com uma cobertura de testes acima de 80% com testes unitário e de integração.
+
+![Estrutura dos testes](src/main/resources/META-INF/resources/teste-uni-integra.png)
+![Cobertura](src/main/resources/META-INF/resources/cobertura-testes.png)
+
 # 🐋 Configurando o ambiente
 
 Para configurar o ambiente, siga os passos abaixo:
@@ -113,3 +120,84 @@ Podemos ver um exmeplo do playload decodificado:
   "jti": "38267a4d-3ceb-404f-83a7-f032271c6fe0"
 }
 ```
+
+# 💰 Criar simulações
+
+Para criar uma simulação faça a seguinte request:
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/simular-investimento
+body:
+{
+    "clienteId": 1,
+    "valor": 1000,
+    "prazoMeses": 4,
+    "tipoProduto": "CDB"
+}
+```
+
+**Retorno da simulação**, A api também calculará a rentabilidade esperada para cada mês do investimeto:
+
+```json
+{
+    "produtoValidado": {
+        "id": 1,
+        "nome": "RendaFixa Caixa 2026",
+        "risco": "Baixo",
+        "tipo": "CDB",
+        "rentabilidade": 0.12
+    },
+    "dataSimulacao": "2025-11-19T13:45:48Z",
+    "resultadoSimulacao": {
+        "rentabilidadeEfetiva": 0.12,
+        "progressao": [
+            1009.49,
+            1019.07,
+            1028.74,
+            1038.5
+        ],
+        "valorFinal": 1038.5,
+        "prazoMeses": 5
+    }
+}
+```
+
+### Exemplo de execução
+
+![Exemplo de criacao de simulacao](src/main/resources/META-INF/resources/criar-sim.gif)
+
+# 💰 Listar simulações
+
+A API de listagem de simulações é paginada, então o usuário poderá informar qual página e quantidade de dados quer que seja retornado na consulta.
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/simulacoes?pagina=0&quantidade=10
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
+```
+
+**Retorno da listagem**:
+
+```json
+{
+    "total": 3,
+    "dados": [
+        {
+            "id": 1,
+            "clienteId": 1,
+            "produto": "RendaFixa Caixa 2026",
+            "valorInvestido": 1000.0,
+            "valorFinal": 1120.0,
+            "prazoMeses": 12,
+            "dataCriacao": "2025-11-19"
+        },
+        ...
+    ]
+}
+```
+
+### Exemplo de execução
+
+![Exemplo de criacao de simulacao](src/main/resources/META-INF/resources/listagem-sim.gif)
