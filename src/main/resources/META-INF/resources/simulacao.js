@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function (params) {
     const retornoSimValorRet = document.getElementById("retornoSimValorRet")
     const retornoSimValorInv = document.getElementById("retornoSimValorInv")
     const idPerfil = document.getElementById("idPerfil")
+    const listaHistorico = document.getElementById("listaHistorico")
 
     criarContaForm.addEventListener("click", function (e) {
         const data = {
@@ -83,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function (params) {
             retornoSimValorRet.textContent = "Valor retornado: " + r.data.resultadoSimulacao.valorFinal
 
             getPerfil()
+            getHistorico()
         }).catch((err) => {
             showError(JSON.stringify(err.response.data, undefined, 2))
         })
@@ -127,6 +129,24 @@ document.addEventListener("DOMContentLoaded", function (params) {
         axios.get("/perfil-risco/" + clienteId, { headers: header })
             .then((r) => {
                 idPerfil.textContent = r.data.perfil + ", pontuação " + r.data.pontuacao
+            })
+    }
+
+    function getHistorico() {
+        const header = {
+            Authorization: "Bearer " + jwt
+        }
+        axios.get("/investimentos/" + clienteId, { headers: header })
+            .then((r) => {
+                listaHistorico.innerHTML = ""
+                r.data.dados.forEach(element => {
+                    listaHistorico.innerHTML += `<div class="flex flex-col border-b-2 mb-4">
+                        <p class="font-bold text-gray-800 text-2xl">${element.produto}</p>
+                        <p class=""><b>Retorno Final:</b> R$ ${element.valorFinal}</p>
+                        <p class=""><b>Prazo de:</b> ${element.prazoMeses} mes(es)</p>
+                        <p class=""><b>Data:</b> ${element.dataCriacao}</p>
+                    </div>`
+                });
             })
     }
 
