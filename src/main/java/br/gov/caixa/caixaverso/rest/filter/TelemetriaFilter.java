@@ -42,11 +42,16 @@ public class TelemetriaFilter implements ContainerRequestFilter, ContainerRespon
                 model.setCo_path(requestContext.getUriInfo().getPath());
                 model.setNu_tempo((int) tempoMs);
                 model.setDt_criacao(LocalDate.now());
-                telemetriaRepository.inserir(model);
-                
+                inserirAsync(model);
             }
         } catch (Exception e) {
             logger.error("erro ao consultar telemetria",e);
         }
+    }
+
+    private void inserirAsync(TelemetriaModel model) {
+        Thread.ofVirtual().start(() -> {
+            telemetriaRepository.inserir(model);
+        });
     }
 }

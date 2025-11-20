@@ -1,13 +1,14 @@
 # Desafio CaixaVerso Lucas Resende de Sousa Amaral
 
-Olá, obrigado por está analisando a minha implementação do desafio do CaixaVerso. As tecnologias usadas para implementar foram:
-* Quarkus
-* Java 21
-* Qute
-* Mssql e H2
-* Mockito e JUnit
-* Docker e Docker-compose
-* AWS
+Olá, obrigado por está analisando a minha implementação do desafio do CaixaVerso. Os principais pontos chaves dessa implementação:
+* Stack: Quarkus e Java 21.
+* Banco de dados: Mssql e H2.
+* Testes: Mockito para mockar os compomentes nos testes unitários e JUnit.
+* Cache: Perfil do cliente cacheado para aumentar a performance dos endpoints.
+* Thread Virtuais: inserir dados no banco de dados diminuindo a latência em endpoints que persistem dados.
+* Container Engine: Docker e docker-compose.
+* Deploy: Feito na AWS.
+* Extra: Template engine Qute para criar a simulação.
 
 # 📝 Get Start
 
