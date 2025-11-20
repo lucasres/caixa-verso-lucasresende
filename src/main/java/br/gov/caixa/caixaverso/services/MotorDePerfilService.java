@@ -16,6 +16,8 @@ import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.services.Enum.PerfilEnum;
 import br.gov.caixa.caixaverso.services.dto.PerfilClienteDTO;
+import br.gov.caixa.caixaverso.utils.cache.CacheKeyGeneratorPerfilClient;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -58,6 +60,7 @@ public class MotorDePerfilService {
         "Busca por alta rentabilidade, maior risco"
     );
 
+    @CacheResult(cacheName = "cliente-", keyGenerator = CacheKeyGeneratorPerfilClient.class)
     public PerfilClienteDTO executar(Long clienteId) throws RegraInvalidaException {
         UsuarioModel has = usuariosRepository.findById(clienteId);
         if (has == null) {
@@ -102,7 +105,6 @@ public class MotorDePerfilService {
         Integer somaRiscos,
         Double volumeInvestido,
         Integer frequenciaMovimentacao
-
     ) {
         Integer parteDoValorInvestido = 0;
         Integer parteFrequenciaInvestimento = 0;

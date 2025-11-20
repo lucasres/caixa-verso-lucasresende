@@ -123,7 +123,7 @@ Podemos ver um exmeplo do playload decodificado:
 
 # 💰 Criar simulações
 
-Para criar uma simulação faça a seguinte request:
+O endpoint de criar simulações persite a simulação de forma Async(assincrona), levando apenas **8 ms** em média para retornar, em testes locais. Garantindo escalabilidade e performance.
 
 ```
 POST http://ec2-98-84-174-176.compute-1.amazonaws.com/simular-investimento
@@ -245,7 +245,7 @@ headers:
 
 # 👨‍💼 Perfil do cliente
 
-O cálculo da pontuação do perfil do cliente leva em consideração o histórico de investimento que ele realizou. O calcul consistem em uma média ponderada, onde temos 3 tipos de pesos: **risco**, **freqencia** e **valor investido**.
+O cálculo da pontuação do perfil do cliente leva em consideração o histórico de investimento que ele realizou. A formula consiste em uma média ponderada, onde temos 3 tipos de pesos: **risco**, **frequência** e **valor investido**. Importante resaltar que o calculo do perfil fica **cacheado em memória**, evitando calculos desnecessários.
 
 Para a frequência e valor investido, existem 3 faixas que vão receber o valor propocional dentro de sua faixa. 
 
@@ -269,7 +269,7 @@ O valor de cada peso e suas faixas, pode, ser configurado alterando as variávei
 
 Exemplo de um cáculo:
 
-Um cliente que tem 3 investimento de risco Alto, cada um com 10.000 investido, vai ter o seguinte cálculo de pontuação:
+Um cliente que tem 3 investimento de risco Alto, cada um com  R$ 10.000 investido, vai ter o seguinte cálculo de pontuação:
 ```
 Média de risco: (3 + 3 + 3 / 3) => 3
 Frequência: 3
@@ -370,3 +370,96 @@ headers:
 ### Exemplo de execução
 
 ![Exemplo do perfil do cliente](src/main/resources/META-INF/resources/recomendacao.gif)
+
+# 🔢 Quantidade de investimento por cliente
+
+A API de investimentos por cliente, é paginada, permitindo o consumidor determinar a quantidade de itens a serem retornados e qual página buscar.
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/investimentos/{clienteId}?pagina=0&quantidade=10
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
+```
+
+**Retorno dos investimentos**:
+
+```json
+{
+    "total": 2,
+    "dados": [
+        {
+            "id": 1,
+            "clienteId": 1,
+            "produto": "RendaFixa Caixa 2026",
+            "valorInvestido": 10000.0,
+            "valorFinal": 10384.99,
+            "prazoMeses": 4,
+            "dataCriacao": "2025-11-19"
+        },
+        {
+            "id": 2,
+            "clienteId": 1,
+            "produto": "RendaFixa Caixa 2026",
+            "valorInvestido": 10000.0,
+            "valorFinal": 10384.99,
+            "prazoMeses": 4,
+            "dataCriacao": "2025-11-19"
+        }
+    ]
+}
+```
+
+### Exemplo de execução
+
+![Exemplo do perfil do cliente](src/main/resources/META-INF/resources/invs-cliente.gif)
+
+# 🔢 Telemetria
+
+A API retornada os valores referente a cada path que foi chamado.
+
+```
+POST http://ec2-98-84-174-176.compute-1.amazonaws.com/telemetria?inicio=2025-11-19&fim=2025-11-18
+headers:
+{
+    "Authorization": Bearer {{JWT}}
+}
+```
+
+**Retorno dos investimentos**:
+
+```json
+{
+    "servicos": [
+        {
+            "quantidadeChamadas": 14,
+            "nome": "/investimentos/1",
+            "mediaTempoRespostaMs": 5.92
+        },
+        {
+            "quantidadeChamadas": 2,
+            "nome": "/simular-investimento",
+            "mediaTempoRespostaMs": 6.5
+        },
+        {
+            "quantidadeChamadas": 1,
+            "nome": "/telemetria",
+            "mediaTempoRespostaMs": 16.0
+        },
+        {
+            "quantidadeChamadas": 2,
+            "nome": "/v1/auth",
+            "mediaTempoRespostaMs": 3263.0
+        }
+    ],
+    "periodo": {
+        "fim": "2025-11-19",
+        "inicio": "2025-11-19"
+    }
+}
+```
+
+### Exemplo de execução
+
+![Exemplo do perfil do cliente](src/main/resources/META-INF/resources/telemetria.gif)

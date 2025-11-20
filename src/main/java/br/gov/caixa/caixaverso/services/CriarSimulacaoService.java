@@ -12,11 +12,12 @@ import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.rest.dto.SimulacaoRequestDTO;
 import br.gov.caixa.caixaverso.services.dto.SimulacaoDTO;
+import br.gov.caixa.caixaverso.utils.cache.CacheKeyGeneratorPerfilClient;
+import io.quarkus.cache.CacheInvalidate;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,6 +32,7 @@ public class CriarSimulacaoService {
     @Inject
     SimulacaoRepository simulacaoRepository;
 
+    @CacheInvalidate(cacheName = "cliente-", keyGenerator = CacheKeyGeneratorPerfilClient.class)
     public SimulacaoDTO executar(SimulacaoRequestDTO dados) throws RegraInvalidaException {
         ProdutoModel produto = produtoRepository.findByTipo(dados.tipoProduto());
         if (produto == null) {
@@ -59,14 +61,20 @@ public class CriarSimulacaoService {
         model.setNu_prazo_meses(dados.prazoMeses());
         model.setNu_valorInvestido(dados.valor());
         model.setNu_valor_final(progressao.getLast());
-        simulacaoRepository.inserir(model);
+        inserirAsync(model);
 
         String dataAtual = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
         return new SimulacaoDTO(produto, dataAtual, progressao, dados.prazoMeses());
     }
 
-    public double anualParaMensal(double taxaAnual) {
+    private double anualParaMensal(double taxaAnual) {
         return Math.pow(1 + taxaAnual, 1.0 / 12.0) - 1;
+    }
+
+    private void inserirAsync(SimulacoesModel model) {
+        Thread.ofVirtual().start(() -> {
+            simulacaoRepository.inserir(model);
+        });
     }
 }
