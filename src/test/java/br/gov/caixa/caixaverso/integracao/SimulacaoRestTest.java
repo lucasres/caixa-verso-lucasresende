@@ -92,6 +92,26 @@ class SimulacaoRestTest {
 
     @Test
     @TestSecurity(user = "123", roles = {"User"})
+    void test_Nao_Conseguiu_Listar_Simulacoes() {
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .queryParam("pagina", "-1")
+            .when()
+            .get("/simulacoes")
+            .then()
+            .statusCode(400);
+
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .queryParam("quantidade", "-1")
+            .when()
+            .get("/simulacoes")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @TestSecurity(user = "123", roles = {"User"})
     void test_Conseguiu_Listar_Simulacoes_Por_Dia() {
         RestAssured.given()
             .header("Content-Type",MediaType.APPLICATION_JSON)

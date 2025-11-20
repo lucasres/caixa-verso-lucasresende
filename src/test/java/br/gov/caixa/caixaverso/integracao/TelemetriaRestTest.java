@@ -36,11 +36,31 @@ public class TelemetriaRestTest {
     void test_Conseguiu_Listar_Telemetria() {
         setup();
          RestAssured.given()
-            .body(new RegistroRequestDTO("11111111", "12345678", "123"))
             .header("Content-Type",MediaType.APPLICATION_JSON)
             .when()
             .get("/telemetria")
             .then()
             .statusCode(200);
+        
+        RestAssured.given()
+            .queryParam("inicio", "2025-11-01")
+            .queryParam("fim", "2025-11-30")
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .get("/telemetria")
+            .then()
+            .statusCode(200);
+    }
+
+    @Test
+    @TestSecurity(roles = {"User"}, user = "teste")
+    void test_Nao_Conseguiu_Listar_Telemetria() {
+        RestAssured.given()
+        .queryParam("inicio", "ABC")
+        .header("Content-Type",MediaType.APPLICATION_JSON)
+        .when()
+        .get("/telemetria")
+        .then()
+        .statusCode(400);
     }
 }
