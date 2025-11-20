@@ -1,6 +1,7 @@
 package br.gov.caixa.caixaverso.services;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -25,11 +26,14 @@ public class LoginService {
         if (usuario == null || !validarPassword(usuario, pass)) {
             throw new RegraInvalidaException("Usuário ou senha inválida");
         }
+        
+        var exp = LocalDateTime.now().atZone(ZoneId.systemDefault()).plusSeconds(28_800).toInstant()
+            .getEpochSecond();
 
         String token = Jwt.issuer("https://example.com/issuer") 
                 .upn(cpf) 
                 .claim("clienteId", usuario.getCo_id())
-                .expiresAt(28_800)
+                .expiresAt(exp)
                 .groups(new HashSet<>(Arrays.asList(usuario.getIc_perfil())))
                 .sign();
         return new LoginDTO(token);

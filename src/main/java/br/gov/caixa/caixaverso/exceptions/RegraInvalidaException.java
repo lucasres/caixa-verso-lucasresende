@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class RegraInvalidaException extends Throwable {
     List<String> detalhes;
+    String mensgem;
 
     public RegraInvalidaException(String mensagem, List<String> detalhes) {
         super(mensagem);

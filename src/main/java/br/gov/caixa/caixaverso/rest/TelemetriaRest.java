@@ -4,6 +4,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.TelemetriaRepository;
 import br.gov.caixa.caixaverso.rest.dto.TelemetriaResponseDTO;
@@ -25,6 +31,26 @@ public class TelemetriaRest {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/telemetria")
+    @Operation(description = "Listagem de dados de telemtria.")
+    @APIResponses(
+        value = {
+            @APIResponse(
+                name = "Retorna da listagem",
+                responseCode = "200",
+                content = @Content(
+                    schema = @Schema(implementation = TelemetriaResponseDTO.class)
+                )
+            ),
+            @APIResponse(
+                name = "Regra inválida",
+                responseCode = "400",
+                description = "Algum dado fornecido não estava válido",
+                content = @Content(
+                    schema = @Schema(implementation = RegraInvalidaException.class)
+                )
+            )
+        }
+    )
     public Response listaTelemetria(
         @QueryParam("inicio") String inicio,
         @QueryParam("fim") String fim
