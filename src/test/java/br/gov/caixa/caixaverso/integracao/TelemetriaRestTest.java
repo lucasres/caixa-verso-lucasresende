@@ -32,7 +32,7 @@ public class TelemetriaRestTest {
     }
 
     @Test
-    @TestSecurity(roles = {"User"}, user = "teste")
+    @TestSecurity(roles = {"Admin"}, user = "teste")
     void test_Conseguiu_Listar_Telemetria() {
         setup();
          RestAssured.given()
@@ -53,7 +53,7 @@ public class TelemetriaRestTest {
     }
 
     @Test
-    @TestSecurity(roles = {"User"}, user = "teste")
+    @TestSecurity(roles = {"Admin"}, user = "teste")
     void test_Nao_Conseguiu_Listar_Telemetria() {
         RestAssured.given()
         .queryParam("inicio", "ABC")

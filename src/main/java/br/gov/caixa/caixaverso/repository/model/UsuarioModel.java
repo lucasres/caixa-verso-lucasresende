@@ -1,5 +1,6 @@
 package br.gov.caixa.caixaverso.repository.model;
 
+import br.gov.caixa.caixaverso.utils.enums.PerfilUsuario;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,4 +31,11 @@ public class UsuarioModel extends PanacheEntityBase {
 
     @Column(name = "no_password", nullable = false)
     String no_password;
+
+    @Column(name = "ic_perfil", nullable = false)
+    String ic_perfil;
+
+    public UsuarioModel() {
+        ic_perfil = PerfilUsuario.USUARIO.getValor();
+    }
 }

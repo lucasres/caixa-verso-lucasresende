@@ -6,9 +6,10 @@ Olá, obrigado por está analisando a minha implementação do desafio do CaixaV
 * Testes: Mockito para mockar os compomentes nos testes unitários e JUnit.
 * Cache: Perfil do cliente cacheado para aumentar a performance dos endpoints.
 * Thread Virtuais: inserir dados no banco de dados diminuindo a latência em endpoints que persistem dados.
+* Segurança: Api protegida com JWT para autenticação e RBAC para controle de autorização. Senhas criptografadas com algoritimo bcrypt. 
 * Container Engine: Docker e docker-compose.
 * Deploy: Feito na AWS.
-* Extra: Template engine Qute para criar a simulação.
+* Extra: Template engine Qute para criar a simulação
 
 # 📝 Get Start
 
@@ -28,13 +29,16 @@ A API está com uma cobertura de testes acima de 80% com testes unitário e de i
 Para configurar o ambiente, siga os passos abaixo:
 
 1. Certifique-se de ter o Docker e Docker Compose instalados em sua máquina.
+
 2. Clone o repositorio localmente: 
 ```bash
 git clone git@github.com:lucasres/caixa-verso-lucasresende.git
 ```
+
 3. Entre na pasta do projeto e configure suas variaveis de ambiente:
 
 ```bash
+cd caixa-verso-lucasresende
 vi .env
 ```
 
@@ -51,7 +55,7 @@ vi .env
 docker-compose up
 ```
 
-3. Após a execução, você verá os serviços sendo inicializados.
+5. Após a execução, você verá os serviços sendo inicializados.
 
 ### Exemplo de execução:
 
@@ -464,3 +468,145 @@ headers:
 ### Exemplo de execução
 
 ![Exemplo do perfil do cliente](src/main/resources/META-INF/resources/telemetria.gif)
+
+# 🌟 Bônus
+
+## 🎮 Deploy e Front contendo simulação da API
+
+O deploy desse projeto foi feito na AWS, onde você pode [Acessar a simulação aqui](http://ec2-98-84-174-176.compute-1.amazonaws.com/simulacao).
+
+![Exemplo da simulação](src/main/resources/META-INF/resources/telemetria.gif)
+
+## ☁️ YAML Para Deploy em OpenShift
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  DB_HOST: mssql-service
+  DB_PORT: "1433"
+  DB_NAME: mydb
+  DB_USER: sa
+  DB_PASSWORD: StrongPassword123!
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-api
+  template:
+    metadata:
+      labels:
+        app: java-api
+    spec:
+      containers:
+        - name: java-api
+          image: seu-registro/java-api:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: api-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-api-service
+spec:
+  selector:
+    app: java-api
+  ports:
+    - protocol: HTTP
+      port: 80
+      targetPort: 8080
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: java-api-route
+spec:
+  to:
+    kind: Service
+    name: java-api-service
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql
+  template:
+    metadata:
+      labels:
+
+```
+
+
+# 🏗️ Engenharia
+
+## 📁 Definições técnicas
+
+Este projeto foi construído usando a [arquitetura em camadas](https://www.baeldung.com/cs/layered-architecture), é uma arquitetura de fácil entendimento o que possibilidade um desenvolvimento rápido e ágil. O seu principal conceito é dividir as responsabilidades em camadas bem definidas.
+```
+src/
+├── exceptions/ # Contém todas as exceções que o projeto lançará
+├── repository/ # Camada responsável por fazer a conexão com o banco de dados
+├── rest/ # Camadas responsável por lidar com Request/Responses HTTP. Além de conter filters
+├── services/ # As regras de negócios são implementadas como services
+├── utils/ # Camada onde temos códigos que são reutilizaveis
+```
+
+## 🎲 Modelagem do banco de dados
+
+```sql
+CREATE TABLE produtos (
+    co_id INT PRIMARY KEY AUTO_INCREMENT,
+    co_nome VARCHAR(255) NOT NULL,
+    ic_risco VARCHAR(20) NOT NULL,
+    ic_tipo VARCHAR(50) NOT NULL,
+    nu_rentabilidade DECIMAL(5, 2) NOT NULL
+);
+
+CREATE TABLE users (
+    co_id INT PRIMARY KEY AUTO_INCREMENT,
+    co_cpf VARCHAR(30) NOT NULL,
+    no_nome VARCHAR(255) NOT NULL,
+    ic_perfil VARCHAR(255) DEFAULT 'User' NOT NULL,
+    no_password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE telemetria (
+    co_id INT PRIMARY KEY AUTO_INCREMENT,
+    co_path VARCHAR(30) NOT NULL,
+    nu_tempo INT(11) NOT NULL,
+    dt_criacao DATE NOT NULL
+);
+
+CREATE TABLE simulacoes (
+    co_id INT PRIMARY KEY AUTO_INCREMENT,
+    co_usuario_id INT NOT NULL,
+    de_produto VARCHAR(255) NOT NULL,
+    nu_valor_investido DECIMAL(15, 2) NOT NULL,
+    nu_valor_final DECIMAL(15, 2) NOT NULL,
+    nu_prazo_meses INT NOT NULL,
+    dt_criacao DATE NOT NULL,
+    FOREIGN KEY (co_usuario_id) REFERENCES users(co_id)
+);
+```

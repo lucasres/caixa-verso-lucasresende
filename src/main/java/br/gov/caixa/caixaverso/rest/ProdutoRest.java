@@ -30,7 +30,7 @@ public class ProdutoRest {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"User"})
+    @RolesAllowed({"User", "Admin"})
     @Path("/produtos-recomendados/{perfil}")
     public Response getDeProduto(
         @PathParam("perfil") String perfil,

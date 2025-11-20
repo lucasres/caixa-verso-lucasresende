@@ -33,7 +33,7 @@ public class SimulacoesRest {
     @GET
     @Path("/simulacoes/por-produto-dia")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"User"})
+    @RolesAllowed({"User", "Admin"})
     public Response listarSimulacoesPorDia() throws RegraInvalidaException {
         return Response.status(Response.Status.OK)
             .entity(simulacaoRepository.agruparPorDia())
@@ -42,7 +42,7 @@ public class SimulacoesRest {
 
     @GET
     @Path("/simulacoes")
-    @RolesAllowed({"User"})
+    @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response listarSimulacoes(
         @QueryParam("pagina") Integer pagina,
@@ -71,7 +71,7 @@ public class SimulacoesRest {
 
     @POST
     @Path("/simular-investimento")
-    @RolesAllowed({"User"})
+    @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response criarSimulacao(
@@ -85,7 +85,7 @@ public class SimulacoesRest {
 
     @GET
     @Path("/investimentos/{clienteId}")
-    @RolesAllowed({"User"})
+    @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response listarSimulacoesCliente(
         @PathParam("clienteId") String clienteId,

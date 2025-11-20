@@ -19,7 +19,7 @@ public class ClienteRest {
     @GET
     @Path("/perfil-risco/{clienteId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"User"})
+    @RolesAllowed({"User", "Admin"})
     public Response getRiscoDoClient(
         @PathParam("clienteId") String clienteId
     ) throws RegraInvalidaException {

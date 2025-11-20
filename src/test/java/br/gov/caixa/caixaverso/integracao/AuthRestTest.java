@@ -7,6 +7,7 @@ import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.rest.dto.LoginRequestDTO;
 import br.gov.caixa.caixaverso.rest.dto.RegistroRequestDTO;
+import br.gov.caixa.caixaverso.utils.enums.PerfilUsuario;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.restassured.RestAssured;
@@ -55,7 +56,7 @@ public class AuthRestTest {
     @Test
     void test_Conseguiu_Cadastrar() {
         RestAssured.given()
-            .body(new RegistroRequestDTO("11111111", "12345678", "123"))
+            .body(new RegistroRequestDTO("11111111", "12345678", "123", PerfilUsuario.USUARIO.getValor()))
             .header("Content-Type",MediaType.APPLICATION_JSON)
             .when()
             .post("/v1/auth/cadastro")

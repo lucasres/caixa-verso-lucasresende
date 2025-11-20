@@ -21,7 +21,7 @@ public class TelemetriaRest {
     @Inject
     TelemetriaRepository telemetriaRepository;
 
-    @RolesAllowed({"User"})
+    @RolesAllowed({"Admin"})
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/telemetria")

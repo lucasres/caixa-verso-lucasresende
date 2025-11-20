@@ -1,5 +1,6 @@
 package br.gov.caixa.caixaverso.services;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -27,8 +28,9 @@ public class LoginService {
 
         String token = Jwt.issuer("https://example.com/issuer") 
                 .upn(cpf) 
-                .claim("clienteId", usuario.getCo_id()) 
-                .groups(new HashSet<>(Arrays.asList("User")))
+                .claim("clienteId", usuario.getCo_id())
+                .expiresAt(28_800)
+                .groups(new HashSet<>(Arrays.asList(usuario.getIc_perfil())))
                 .sign();
         return new LoginDTO(token);
     }

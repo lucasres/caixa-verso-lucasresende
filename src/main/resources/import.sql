@@ -29,8 +29,9 @@ VALUES(
 0.22);
 
 INSERT INTO users
-(no_nome, co_cpf, no_password)
+(no_nome, co_cpf, no_password, ic_perfil)
 VALUES(
 'Lucas Resende',
 '12345678912',
-'$2a$12$nEQJJPfeXSwP6skJaW.hmOwN6VxEhdc.UEDYKnWBNoVgahTrsvpy2');
+'$2a$12$nEQJJPfeXSwP6skJaW.hmOwN6VxEhdc.UEDYKnWBNoVgahTrsvpy2',
+'Admin');
