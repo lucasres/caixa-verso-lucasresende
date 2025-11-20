@@ -475,7 +475,7 @@ headers:
 
 O deploy desse projeto foi feito na AWS, onde você pode [Acessar a simulação aqui](http://ec2-98-84-174-176.compute-1.amazonaws.com/simulacao).
 
-![Exemplo da simulação](src/main/resources/META-INF/resources/telemetria.gif)
+![Exemplo da simulação](src/main/resources/META-INF/resources/simulador.gif)
 
 ## ☁️ YAML Para Deploy em OpenShift
 
