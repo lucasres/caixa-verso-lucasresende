@@ -12,7 +12,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 class RegraInvalidaExceptionTest {
     @Test
-    void testGetters() {
+    void test_Getters() {
         var msg = "teste";
         var detalhes = List.of("a", "b");
 

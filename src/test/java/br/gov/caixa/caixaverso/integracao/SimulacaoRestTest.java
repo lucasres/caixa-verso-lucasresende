@@ -116,6 +116,28 @@ class SimulacaoRestTest {
 
     @Test
     @TestSecurity(user = "123", roles = {"User"})
+    void test_Nao_Conseguiu_Listar_Simulacoes_Por_Cliente() {
+        setupUsuario();
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .queryParam("pagina", "-1")
+            .when()
+            .get("/investimentos/" + usuarioModel.getCo_id())
+            .then()
+            .statusCode(400);
+
+        RestAssured.given()
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .queryParam("quantidade", "-1")
+            .when()
+            .get("/investimentos/" + usuarioModel.getCo_id())
+            .then()
+            .statusCode(400);
+        tearDownSimular();
+    }
+
+    @Test
+    @TestSecurity(user = "123", roles = {"User"})
     void test_Falha_Listar_Simulacoes_Por_Cliente() {
         RestAssured.given()
             .header("Content-Type",MediaType.APPLICATION_JSON)

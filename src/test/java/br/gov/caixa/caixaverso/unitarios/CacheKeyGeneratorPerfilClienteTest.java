@@ -14,7 +14,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 class CacheKeyGeneratorPerfilClienteTest {
     @Test
-    void gerarCacheComSucesso() {
+    void test_Gerar_Cache_Co_mSucesso() {
         CacheKeyGeneratorPerfilClient gerador = new CacheKeyGeneratorPerfilClient();
 
         Object retorno = gerador.generate(null, new Object[]{1L});
@@ -25,7 +25,7 @@ class CacheKeyGeneratorPerfilClienteTest {
     }
 
     @Test
-    void gerarCacheComError() {
+    void test_Gerar_Cache_Com_Error() {
         CacheKeyGeneratorPerfilClient gerador = new CacheKeyGeneratorPerfilClient();
 
         assertThrows(InvalidParameterException.class, () -> {
