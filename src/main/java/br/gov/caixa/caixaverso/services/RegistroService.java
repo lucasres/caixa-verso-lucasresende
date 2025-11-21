@@ -18,7 +18,11 @@ public class RegistroService {
     @Inject
     UsuarioPersistance usuarioPersistance;
 
-    public LoginDTO executar(String cpf, String pass, String nome) throws RegraInvalidaException {
+    public LoginDTO executar(String cpf, String pass, String nome, String perfil) throws RegraInvalidaException {
+        if (perfil == null) {
+            perfil = "User";
+        }
+
         UsuarioModel usuarioExistente = usuarioPersistance.findUsuarioByCpf(cpf);
 
         if (usuarioExistente != null) {
@@ -29,6 +33,7 @@ public class RegistroService {
         model.setCo_cpf(cpf);
         model.setNo_password(BCrypt.hashpw(pass, BCrypt.gensalt()));
         model.setNo_nome(nome);
+        model.setIc_perfil(perfil);
 
         usuarioPersistance.inserir(model);
 
@@ -36,7 +41,7 @@ public class RegistroService {
         String token = Jwt.issuer("https://example.com/issuer") 
                 .upn(cpf) 
                 .claim("clienteId", model.getCo_id()) 
-                .groups(new HashSet<>(Arrays.asList("User")))
+                .groups(new HashSet<>(Arrays.asList(model.getIc_perfil())))
                 .sign();
 
         return new LoginDTO(token);

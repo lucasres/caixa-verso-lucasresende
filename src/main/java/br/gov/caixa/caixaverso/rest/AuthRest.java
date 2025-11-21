@@ -126,7 +126,7 @@ public class AuthRest {
     ) throws RegraInvalidaException {
         Response.Status status = Response.Status.OK;
 
-        var usuario = registroService.executar(request.cpf(), request.password(), request.nome());
+        var usuario = registroService.executar(request.cpf(), request.password(), request.nome(), request.perfil());
 
         return Response.status(status)
             .entity(usuario)
