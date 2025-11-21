@@ -9,7 +9,7 @@ Olá, obrigado por estar analisando a minha implementação do desafio do CaixaV
 * Segurança: Api protegida com JWT para autenticação e RBAC para controle de autorização. Senhas criptografadas com algoritimo bcrypt. 
 * Container Engine: Docker e docker-compose.
 * Deploy: Feito na AWS.
-* Swagger: [http://ec2-98-84-174-176.compute-1.amazonaws.com/q/swagger-ui/](http://ec2-98-84-174-176.compute-1.amazonaws.com/q/swagger-ui/)
+* Swagger
 * Extra: Template engine Qute para criar a simulação
 
 # 📝 Get Start
@@ -475,6 +475,8 @@ headers:
 ## 🎮 Deploy e Front contendo simulação da API
 
 O deploy desse projeto foi feito na AWS, onde você pode [Acessar a simulação aqui](http://ec2-98-84-174-176.compute-1.amazonaws.com/simulacao).
+
+o Swagger da implementação pode ser acessado em [http://ec2-98-84-174-176.compute-1.amazonaws.com/q/swagger-ui/](http://ec2-98-84-174-176.compute-1.amazonaws.com/q/swagger-ui/)
 
 ![Exemplo da simulação](src/main/resources/META-INF/resources/simulador.gif)
 
