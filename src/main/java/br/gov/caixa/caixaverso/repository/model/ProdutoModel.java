@@ -45,6 +45,10 @@ public class ProdutoModel extends PanacheEntityBase {
     @JsonProperty("rentabilidade")
     Float nu_rentabilidade;
 
+    @Column(name = "de_liquidez", nullable = false)
+    @JsonProperty("liquidez")
+    String de_liquidez;
+
     @Column(name = "dt_criacao", nullable = false)
     @JsonIgnore
     LocalDate dt_criacao;

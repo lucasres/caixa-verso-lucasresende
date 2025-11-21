@@ -10,10 +10,6 @@ import jakarta.ws.rs.Path;
 @Path("")
 public class SimulacaoRest {
     @Inject
-    @Location(value = "documentacao")
-    Template documentacao;
-
-    @Inject
     @Location(value = "simulacao")
     Template simulacao;
 
