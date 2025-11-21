@@ -16,7 +16,7 @@ Olá, obrigado por estar analisando a minha implementação do desafio do CaixaV
 
 Você pode seguir este readme para analisar o que foi entregue nesse projeto. Porém, recomendo que fique até final, onde temos um bônus. Além de ter feito a API do desafio, também de forma a inovar decidi criar um front end aonde chama a API desenvolvida para melhor exemplificar as suas funcionalidades.
 
-O deploy dessa aplicação foi feito na AWS, pode ser localizado nesse link: [http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao](http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao)
+O deploy dessa aplicação foi feito na AWS, ao final terá um lick para acessar a simulação e o swagger.
 
 # 🧪 Teste unitário e de Integração
 
