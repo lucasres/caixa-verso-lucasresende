@@ -1,5 +1,8 @@
 package br.gov.caixa.caixaverso.repository.model;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -41,4 +44,8 @@ public class ProdutoModel extends PanacheEntityBase {
     @Column(name = "nu_rentabilidade", nullable = false)
     @JsonProperty("rentabilidade")
     Float nu_rentabilidade;
+
+    @Column(name = "dt_criacao", nullable = false)
+    @JsonIgnore
+    LocalDate dt_criacao;
 }

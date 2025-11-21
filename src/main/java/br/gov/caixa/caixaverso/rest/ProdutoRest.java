@@ -19,6 +19,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -59,9 +60,11 @@ public class ProdutoRest {
             )
         }
     )
-    public Response getDeProduto(
+    public Response getRecomendacao(
         @PathParam("perfil") String perfil,
-        @Context SecurityContext ctx
+        @Context SecurityContext ctx,
+        @QueryParam("flagMaiorRentabilidade") Boolean flagMaiorRentabilidade,
+        @QueryParam("flagProdutoMaisNovo") Boolean flagProdutoMaisNovo
     ) throws RegraInvalidaException {
         if (jwt.claim("clienteId") == null) {
             throw new UnauthorizedException();
@@ -71,7 +74,7 @@ public class ProdutoRest {
         logger.info("perfil passado: " + perfil);
         logger.info("client id: " +  clienteId);
         Response.Status status = Response.Status.OK;
-        var produtos = motorDeRecomendacaoService.executar(perfil, clienteId);
+        var produtos = motorDeRecomendacaoService.executar(perfil, clienteId, flagMaiorRentabilidade, flagProdutoMaisNovo);
 
         return Response.status(status)
             .entity(produtos)

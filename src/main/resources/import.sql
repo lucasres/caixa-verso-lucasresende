@@ -5,28 +5,31 @@
 -- insert into myentity (id, field) values(3, 'field-3');
 -- alter sequence myentity_seq restart with 4;
 INSERT INTO produtos
-(co_nome, ic_risco, ic_tipo, nu_rentabilidade)
+(co_nome, ic_risco, ic_tipo, nu_rentabilidade, dt_criacao)
 VALUES(
 'RendaFixa Caixa 2026',
 'Baixo',
 'CDB',
-0.12);
+0.12,
+'2025-11-01');
 
 INSERT INTO produtos
-(co_nome, ic_risco, ic_tipo, nu_rentabilidade)
+(co_nome, ic_risco, ic_tipo, nu_rentabilidade, dt_criacao)
 VALUES(
 'Debenture Empresa XPTO',
 'Medio',
 'Debenture',
-0.18);
+0.18,
+'2025-11-10');
 
 INSERT INTO produtos
-(co_nome, ic_risco, ic_tipo, nu_rentabilidade)
+(co_nome, ic_risco, ic_tipo, nu_rentabilidade, dt_criacao)
 VALUES(
 'RendaVariavel Fundo XPTO',
 'Alto',
 'Ações',
-0.22);
+0.22,
+'2025-11-08');
 
 INSERT INTO users
 (no_nome, co_cpf, no_password, ic_perfil)

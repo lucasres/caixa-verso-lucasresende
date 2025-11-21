@@ -28,4 +28,21 @@ public class ProdutoRestTest extends BaseTeste {
             .statusCode(200);
         tearDownPerfil();
     }
+
+    @Test
+    @TestSecurity(user = "123", roles = {"User"})
+    void test_Conseguiu_Recuperar_Perfil_Com_Flags() {
+        setupPerfil();
+
+        RestAssured.given()
+            .queryParam("flagProdutoMaisNovo", true)
+            .queryParam("flagMaiorRentabilidade", true)
+            .body(new LoginRequestDTO("11223456789", "12345678"))
+            .header("Content-Type",MediaType.APPLICATION_JSON)
+            .when()
+            .get("/produtos-recomendados/Conservador")
+            .then()
+            .statusCode(200);
+        tearDownPerfil();
+    }
 }

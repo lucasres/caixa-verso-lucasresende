@@ -12,7 +12,8 @@ public class LoginExemplo {
     {
         "cpf": "12345678915",
         "password": "12345678",
-        "nome": "Lucas Resende"
+        "nome": "Lucas Resende",
+        "perfil": "Admin"
     }
     """;
 }

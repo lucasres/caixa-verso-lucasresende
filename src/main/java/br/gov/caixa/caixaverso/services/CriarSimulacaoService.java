@@ -3,6 +3,8 @@ package br.gov.caixa.caixaverso.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
@@ -24,6 +26,9 @@ import java.time.format.DateTimeFormatter;
 @ApplicationScoped
 public class CriarSimulacaoService {
     @Inject
+    Logger logger = Logger.getLogger(CriarSimulacaoService.class);
+
+    @Inject
     ProdutoRepository produtoRepository;
 
     @Inject
@@ -34,6 +39,8 @@ public class CriarSimulacaoService {
 
     @CacheInvalidate(cacheName = "cliente-", keyGenerator = CacheKeyGeneratorPerfilClient.class)
     public SimulacaoDTO executar(SimulacaoRequestDTO dados) throws RegraInvalidaException {
+        logger.infof("iniciando simulação cliente: %d", dados.clienteId());
+
         ProdutoModel produto = produtoRepository.findByTipo(dados.tipoProduto());
         if (produto == null) {
             throw new RegraInvalidaException("Produto do tipo '" + dados.tipoProduto() + "' não existe na base");
@@ -75,6 +82,7 @@ public class CriarSimulacaoService {
     private void inserirAsync(SimulacoesModel model) {
         Thread.ofVirtual().start(() -> {
             simulacaoRepository.inserir(model);
+            logger.infof("simulação cliente: %d, persistida com id: %d", model.getCo_usuario_id(), model.getCo_id());
         });
     }
 }

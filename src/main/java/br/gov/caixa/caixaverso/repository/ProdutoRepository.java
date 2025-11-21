@@ -1,6 +1,8 @@
 package br.gov.caixa.caixaverso.repository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
@@ -14,9 +16,10 @@ public class ProdutoRepository implements PanacheRepository<ProdutoModel> {
         return query.getSingleResultOrNull();
     }
 
-    public List<ProdutoModel> findByRiscos(List<String> riscos) {
+    public Set<ProdutoModel> findByRiscos(List<String> riscos) {
         var query = getEntityManager().createNamedQuery("findAllByRiscos", ProdutoModel.class);
         query.setParameter("riscos", riscos);
-        return query.getResultList();
+        var produtos = query.getResultList();
+        return new HashSet<>(produtos);
     }
 }

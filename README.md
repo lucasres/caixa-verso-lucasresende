@@ -62,6 +62,22 @@ docker-compose up
 
 ![Exemplo de execução do Docker Compose](src/main/resources/META-INF/resources/docker-compose.gif)
 
+# 🛡️ Programação defensiva
+
+* Todos os endpoints fazem o **tratamento de input de dados** para evitar erros internos. Ao enviar algum dados inválido a API irá retornar o seguinte payload
+```json
+{
+    "menssagem": "Mensagem sobre o erro",
+    "detalhes": [
+      "detalhes adicionais 1",
+      "detalhes adicionais 2"
+    ]
+}
+```
+* Logs para auditoria e contendo informações sobre a request.
+![Exemplo de login](src/main/resources/META-INF/resources/logs_auditoria.png)
+
+
 # 🔒 Autenticação
 
 A API foi criada com autenticação JWT usando a lib `quarkus-smallrye-jwt`, além da autenticação padrão por JWT, também foi implementado um RBAC(Role Based Access Control), onde usuário podem ter diferentes perfils para poder acessar rotas com privilégios exigidos.
@@ -324,17 +340,17 @@ headers:
 
 Se quiser pode configurar novos pesos e novas faixas de pontuação, criando as seguintes variaveis de ambientes:
 
-| Variável             | Descrição                          | Exemplo               |
-|----------------------|------------------------------------|-----------------------|
-| `PESO_RISCO`         | Valor do peso do risco             | `3` padrão(7)         |
-| `PESO_FREQ`          | Valor do peso da frequência        | `2` padrão(2)         |
-| `FAIXA_CONSERVADOR`  | Limite da faixa de conservador     | `33` padrão(45)       |
-| `FAIXA_MODERADO`     | Limite da faixa de moderado        | `66` padrão(66)       |
+| Variável             | Descrição                          | Exemplo                 |
+|----------------------|------------------------------------|-------------------------|
+| `PESO_RISCO`         | Valor do peso do risco             | `3` padrão(`7`)         |
+| `PESO_FREQ`          | Valor do peso da frequência        | `2` padrão(`2`)         |
+| `FAIXA_CONSERVADOR`  | Limite da faixa de conservador     | `33` padrão(`45`)       |
+| `FAIXA_MODERADO`     | Limite da faixa de moderado        | `66` padrão(`66`)       |
 
 
 # 👨‍💼 Recomendação de produto
 
-O motor de recomendações utiliza o mesmo cálculo de perfil. Ele recupera o identificador do cliente e calcula o seu perfil e procura por um produto segundo o perfil passado.
+O motor de recomendações, utiliza o mesmo cálculo de perfil, ele recupera o identificador do cliente em uma claim no JWT chamada de `clienteId` e calcula o seu perfil, após isso ele recupera um produto equivalente ao perfil informado na requisição, tendo a seguinte composição:
 
 Exemplo:
 ```
@@ -343,6 +359,13 @@ Pede uma recomendação de perfil: Moderado
 Produtos retornados:
 Risco Baixo + Risco Médio
 ```
+
+Porém, o motor de perfil consta com flags que podem mudar o seu comportamento, que devem ser passadas como `queryParams`, segue a tabela abaixo com as flags disponíveis:
+
+| Flag                     | Descrição                                        | Exemplo               |
+|--------------------------|--------------------------------------------------|-----------------------|
+| `flagProdutoMaisNovo`    | Sempre irá retorna o produto mais novo da base.  | `true` padrão(`false`)|
+| `flagMaiorRentabilidade` | Sempre irá retorna o produto mais rentável.      | `true` padrão(`false`)|
 
 ```
 POST http://ec2-98-84-174-176.compute-1.amazonaws.com/produtos-recomendados/{perfil}
@@ -565,7 +588,6 @@ spec:
 
 ```
 
-
 # 🏗️ Engenharia
 
 ## 📁 Definições técnicas
@@ -588,7 +610,8 @@ CREATE TABLE produtos (
     co_nome VARCHAR(255) NOT NULL,
     ic_risco VARCHAR(20) NOT NULL,
     ic_tipo VARCHAR(50) NOT NULL,
-    nu_rentabilidade DECIMAL(5, 2) NOT NULL
+    nu_rentabilidade DECIMAL(5, 2) NOT NULL,
+    dt_criacao DATE NOT NULL
 );
 
 CREATE TABLE users (
@@ -616,4 +639,13 @@ CREATE TABLE simulacoes (
     dt_criacao DATE NOT NULL,
     FOREIGN KEY (co_usuario_id) REFERENCES users(co_id)
 );
+
+CREATE INDEX idx_simulacoes_co_usuario_id
+ON simulacoes (co_usuario_id);
+
+CREATE INDEX idx_produtos_ic_risco
+ON produtos (ic_risco);
+
+CREATE INDEX idx_produtos_ic_tipo
+ON produtos (ic_tipo);
 ```
