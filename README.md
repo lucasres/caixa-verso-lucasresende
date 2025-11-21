@@ -593,6 +593,7 @@ spec:
 ## 📁 Definições técnicas
 
 Este projeto foi construído usando a [arquitetura em camadas](https://www.baeldung.com/cs/layered-architecture). Ela é uma arquitetura de fácil entendimento o que possibilita um desenvolvimento rápido e ágil. O seu principal conceito é dividir as responsabilidades em camadas bem definidas.
+
 ```
 src/
 ├── exceptions/ # Contém todas as exceções que o projeto lançará
@@ -601,6 +602,8 @@ src/
 ├── services/ # As regras de negócios são implementadas como services
 ├── utils/ # Camada onde temos códigos que são reutilizaveis
 ```
+
+
 
 ## 🎲 Modelagem do banco de dados
 
@@ -611,7 +614,8 @@ CREATE TABLE produtos (
     ic_risco VARCHAR(20) NOT NULL,
     ic_tipo VARCHAR(50) NOT NULL,
     nu_rentabilidade DECIMAL(5, 2) NOT NULL,
-    dt_criacao DATE NOT NULL
+    dt_criacao DATE NOT NULL,
+    de_liquidez varchar(255) NOT NULL
 );
 
 CREATE TABLE users (

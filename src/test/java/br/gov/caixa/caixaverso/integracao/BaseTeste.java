@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.mockito.Mockito;
 
-import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
+import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
@@ -18,7 +18,7 @@ public class BaseTeste {
     UsuariosRepository usuariosRepository;
     
     @Inject
-    SimulacaoRepository simulacaoRepository;
+    SimulacaoPersistance simulacaoPersistance;
 
     @InjectMock
     JsonWebToken jwt;
@@ -38,10 +38,10 @@ public class BaseTeste {
         Mockito.when(jwt.getClaim("clienteId")).thenReturn(usuarioModel.getCo_id());
 
         SimulacoesModel simulacoesModel = criarSimulacao((long) usuarioModel.getCo_id());
-        simulacaoRepository.inserir(simulacoesModel);
+        simulacaoPersistance.inserir(simulacoesModel);
 
 
-        simulacaoRepository.inserir(simulacoesModel);
+        simulacaoPersistance.inserir(simulacoesModel);
     }
 
     @Transactional

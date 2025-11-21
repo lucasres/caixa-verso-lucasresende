@@ -11,8 +11,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
 import br.gov.caixa.caixaverso.repository.dto.ResultadoPaginadoDTO;
 import br.gov.caixa.caixaverso.repository.dto.SimulacoesAgrupadasPorDiaDTO;
 import br.gov.caixa.caixaverso.rest.dto.RegistroRequestDTO;
@@ -43,7 +43,7 @@ public class SimulacoesRest {
     CriarSimulacaoService criarSimulacaoService;
 
     @Inject
-    SimulacaoRepository simulacaoRepository;
+    SimulacaoPersistance simulacaoPersistance;
 
     @GET
     @Path("/simulacoes/por-produto-dia")
@@ -71,7 +71,7 @@ public class SimulacoesRest {
     )
     public Response listarSimulacoesPorDia() throws RegraInvalidaException {
         return Response.status(Response.Status.OK)
-            .entity(simulacaoRepository.agruparPorDia())
+            .entity(simulacaoPersistance.agruparPorDia())
             .build();
     }
 
@@ -120,7 +120,7 @@ public class SimulacoesRest {
         }
 
         return Response.status(Response.Status.OK)
-            .entity(simulacaoRepository.listar(pagina, quantidade))
+            .entity(simulacaoPersistance.listar(pagina, quantidade))
             .build();
     }
 
@@ -218,7 +218,7 @@ public class SimulacoesRest {
         }
 
         return Response.status(Response.Status.OK)
-            .entity(simulacaoRepository.listarByClienteIdPaginado(Long.parseLong(clienteId), pagina, quantidade))
+            .entity(simulacaoPersistance.listarByClienteIdPaginado(Long.parseLong(clienteId), pagina, quantidade))
             .build();
     }
 }

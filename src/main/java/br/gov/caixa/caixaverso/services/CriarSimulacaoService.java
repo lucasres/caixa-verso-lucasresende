@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
-import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
@@ -35,7 +35,7 @@ public class CriarSimulacaoService {
     UsuariosRepository usuariosRepository;
 
     @Inject
-    SimulacaoRepository simulacaoRepository;
+    SimulacaoPersistance simulacaoPersistance;
 
     @CacheInvalidate(cacheName = "cliente-", keyGenerator = CacheKeyGeneratorPerfilClient.class)
     public SimulacaoDTO executar(SimulacaoRequestDTO dados) throws RegraInvalidaException {
@@ -81,7 +81,7 @@ public class CriarSimulacaoService {
 
     private void inserirAsync(SimulacoesModel model) {
         Thread.ofVirtual().start(() -> {
-            simulacaoRepository.inserir(model);
+            simulacaoPersistance.inserir(model);
             logger.infof("simulação cliente: %d, persistida com id: %d", model.getCo_usuario_id(), model.getCo_id());
         });
     }

@@ -1,15 +1,14 @@
 package br.gov.caixa.caixaverso.services;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
+import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
-import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
@@ -24,7 +23,7 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class MotorDePerfilService {
     @Inject
-    SimulacaoRepository simulacaoRepository;
+    SimulacaoPersistance simulacaoPersistance;
 
     @Inject
     ProdutoRepository produtoRepository;
@@ -67,7 +66,7 @@ public class MotorDePerfilService {
             throw new RegraInvalidaException("Usuário com o id '" + clienteId + "' não foi encontrado na base");
         }
 
-        var simulacoes = simulacaoRepository.listarByClienteId(clienteId);
+        var simulacoes = simulacaoPersistance.listarByClienteId(clienteId);
         if (simulacoes.isEmpty()) {
             throw new RegraInvalidaException("Para poder ter um perfil, primeiro faça uma simulação");
         }

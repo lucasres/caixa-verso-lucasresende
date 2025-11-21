@@ -2,6 +2,7 @@ package br.gov.caixa.caixaverso.repository;
 
 import java.util.List;
 
+import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.repository.dto.ResultadoPaginadoDTO;
 import br.gov.caixa.caixaverso.repository.dto.SimulacoesAgrupadasPorDiaDTO;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
@@ -12,7 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class SimulacaoRepository implements PanacheRepository<SimulacoesModel> {
+public class SimulacaoRepository implements PanacheRepository<SimulacoesModel>, SimulacaoPersistance {
     @Transactional
     public SimulacoesModel inserir(SimulacoesModel model) {
         getEntityManager().persist(model);

@@ -8,11 +8,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.integracao.BaseTeste;
 import br.gov.caixa.caixaverso.profile.TesteProfile;
 import br.gov.caixa.caixaverso.repository.ProdutoRepository;
-import br.gov.caixa.caixaverso.repository.SimulacaoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
@@ -30,7 +30,7 @@ public class MotorPerfilServiceTest extends BaseTeste {
     MotorDePerfilService motorDePerfilService;
 
     @InjectMock
-    SimulacaoRepository simulacaoRepository;
+    SimulacaoPersistance simulacaoPersistance;
 
     @InjectMock
     ProdutoRepository produtoRepository;
@@ -45,7 +45,7 @@ public class MotorPerfilServiceTest extends BaseTeste {
 
         Mockito.when(usuariosRepository.findById(1L)).thenReturn(usuarioModel);
         
-        Mockito.when(simulacaoRepository.listarByClienteId(1L)).thenReturn(
+        Mockito.when(simulacaoPersistance.listarByClienteId(1L)).thenReturn(
             List.of(
                 criarSimulacao(1L),
                 criarSimulacao(1L),
