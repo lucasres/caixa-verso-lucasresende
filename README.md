@@ -590,12 +590,19 @@ spec:
 
 # 🏗️ Engenharia
 
+## SOLID
+
+O projeto aplicou o solid, dando enfase aos principios de:
+* **Responsabilidade única**: Onde cada classe tem um único propôsito.
+* **Inversão de dependências**: A camada de contratos server para definir as interfaces e padronizar a comunicação com a camada de service onde temos as nossas regras de negócios, evitando que o service dependa de implementações concretas.
+
 ## 📁 Definições técnicas
 
 Este projeto foi construído usando a [arquitetura em camadas](https://www.baeldung.com/cs/layered-architecture). Ela é uma arquitetura de fácil entendimento o que possibilita um desenvolvimento rápido e ágil. O seu principal conceito é dividir as responsabilidades em camadas bem definidas.
 
 ```
 src/
+├── contracts/ # Contém todas interfaces de comunicação com as services
 ├── exceptions/ # Contém todas as exceções que o projeto lançará
 ├── repository/ # Camada responsável por fazer a conexão com o banco de dados
 ├── rest/ # Camadas responsável por lidar com Request/Responses HTTP. Além de conter filters
