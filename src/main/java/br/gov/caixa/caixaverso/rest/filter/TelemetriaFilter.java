@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import org.jboss.logging.Logger;
 
-import br.gov.caixa.caixaverso.repository.TelemetriaRepository;
+import br.gov.caixa.caixaverso.contracts.TelemetriaPersistance;
 import br.gov.caixa.caixaverso.repository.model.TelemetriaModel;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -22,7 +22,7 @@ public class TelemetriaFilter implements ContainerRequestFilter, ContainerRespon
     Logger logger = Logger.getLogger(TelemetriaFilter.class); 
 
     @Inject
-    TelemetriaRepository telemetriaRepository;
+    TelemetriaPersistance telemetriaPersistance;
 
 
     @Override
@@ -51,7 +51,7 @@ public class TelemetriaFilter implements ContainerRequestFilter, ContainerRespon
 
     private void inserirAsync(TelemetriaModel model) {
         Thread.ofVirtual().start(() -> {
-            telemetriaRepository.inserir(model);
+            telemetriaPersistance.inserir(model);
         });
     }
 }

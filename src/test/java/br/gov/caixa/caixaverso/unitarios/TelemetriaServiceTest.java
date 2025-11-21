@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import br.gov.caixa.caixaverso.repository.TelemetriaRepository;
+import br.gov.caixa.caixaverso.contracts.TelemetriaPersistance;
 import br.gov.caixa.caixaverso.repository.dto.TelemetriaAgrupadasPorPath;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -17,7 +17,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 class TelemetriaServiceTest {
     @InjectMock
-    TelemetriaRepository telemetriaRepository;
+    TelemetriaPersistance telemetriaPersistance;
 
     @Test
     void test_Listar_Dados_Telemetria() {
@@ -27,9 +27,9 @@ class TelemetriaServiceTest {
             20.0
         );
         
-        Mockito.when(telemetriaRepository.agruparPorPath(any(), any()))
+        Mockito.when(telemetriaPersistance.agruparPorPath(any(), any()))
             .thenReturn(List.of(dadosTelemetria, dadosTelemetria, dadosTelemetria));
 
-        assertEquals(3, telemetriaRepository.agruparPorPath(LocalDate.now(), LocalDate.now()).size());
+        assertEquals(3, telemetriaPersistance.agruparPorPath(LocalDate.now(), LocalDate.now()).size());
     }
 }

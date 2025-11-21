@@ -4,10 +4,9 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
+import br.gov.caixa.caixaverso.contracts.TelemetriaPersistance;
 import br.gov.caixa.caixaverso.profile.TesteProfile;
-import br.gov.caixa.caixaverso.repository.TelemetriaRepository;
 import br.gov.caixa.caixaverso.repository.model.TelemetriaModel;
-import br.gov.caixa.caixaverso.rest.dto.RegistroRequestDTO;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.quarkus.test.security.TestSecurity;
@@ -20,7 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 @TestProfile(TesteProfile.class)
 public class TelemetriaRestTest {
     @Inject
-    TelemetriaRepository telemetriaRepository;
+    TelemetriaPersistance telemetriaPersistance;
 
     @Transactional
     void setup() {
@@ -28,7 +27,7 @@ public class TelemetriaRestTest {
         model.setCo_path("/api/test");
         model.setNu_tempo(200);
         model.setDt_criacao(LocalDate.now());
-        telemetriaRepository.persist(model);
+        telemetriaPersistance.inserir(model);
     }
 
     @Test

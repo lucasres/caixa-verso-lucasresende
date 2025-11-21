@@ -10,8 +10,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
+import br.gov.caixa.caixaverso.contracts.TelemetriaPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.TelemetriaRepository;
 import br.gov.caixa.caixaverso.rest.dto.TelemetriaResponseDTO;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.Response;
 @Path("")
 public class TelemetriaRest {
     @Inject
-    TelemetriaRepository telemetriaRepository;
+    TelemetriaPersistance telemetriaPersistance;
 
     @RolesAllowed({"Admin"})
     @GET
@@ -65,7 +65,7 @@ public class TelemetriaRest {
             throw new RegraInvalidaException("valor do inicio ou fim inválido: Padrão esperado YYYY-mm-dd");
         }
 
-        var telemetrias = telemetriaRepository.agruparPorPath(inicioParsed, fimParsed);
+        var telemetrias = telemetriaPersistance.agruparPorPath(inicioParsed, fimParsed);
         var periodo = Map.of("inicio", inicioParsed.toString(), "fim", fimParsed.toString());
 
         return Response.status(Response.Status.OK)
