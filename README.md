@@ -1,6 +1,6 @@
 # Desafio CaixaVerso Lucas Resende de Sousa Amaral
 
-Olá, obrigado por está analisando a minha implementação do desafio do CaixaVerso. Os principais pontos chaves dessa implementação:
+Olá, obrigado por estar analisando a minha implementação do desafio do CaixaVerso. Os principais pontos chaves dessa implementação:
 * Stack: Quarkus e Java 21.
 * Banco de dados: Mssql e H2.
 * Testes: Mockito para mockar os compomentes nos testes unitários e JUnit.
@@ -14,13 +14,13 @@ Olá, obrigado por está analisando a minha implementação do desafio do CaixaV
 
 # 📝 Get Start
 
-Você pode seguir este readme para analisar o que foi entregue nesse projeto, porém recomendo que fique até final, onde temos um bônus, além de ter feito a API do desáfio, também de forma a inovar decidi criar um front end onde chama a API desenvolvida para melhor exemplificar as suas funcionalidades.
+Você pode seguir este readme para analisar o que foi entregue nesse projeto. Porém, recomendo que fique até final, onde temos um bônus. Além de ter feito a API do desafio, também de forma a inovar decidi criar um front end aonde chama a API desenvolvida para melhor exemplificar as suas funcionalidades.
 
 O deploy dessa aplicação foi feito na AWS, pode ser localizado nesse link: [http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao](http://ec2-98-84-174-176.compute-1.amazonaws.com/documentacao)
 
 # 🧪 Teste unitário e de Integração
 
-A API está com uma cobertura de testes acima de 80% com testes unitário e de integração.
+A API tem uma cobertura de testes acima de 90%, com testes unitário e de integração.
 
 ![Estrutura dos testes](src/main/resources/META-INF/resources/teste-uni-integra.png)
 ![Cobertura](src/main/resources/META-INF/resources/cobertura-testes.png)
@@ -146,7 +146,7 @@ body:
 }
 ```
 
-**Retorno da simulação**, A api também calculará a rentabilidade esperada para cada mês do investimeto:
+**Retorno da simulação**: A api também calculará a rentabilidade esperada para cada mês do investimeto:
 
 ```json
 {
@@ -213,7 +213,7 @@ headers:
 ![Exemplo de criacao de simulacao](src/main/resources/META-INF/resources/listagem-sim.gif)
 
 
-# 🗓️ Listar SImulações por produto por dia
+# 🗓️ Listar Simulações por produto por dia
 
 A API de listagem de simulações por dia, agrupará os dados por dia, trazendo a quantidade de produtos naquele dia para aquele tipo de produto
 
@@ -255,7 +255,7 @@ O cálculo da pontuação do perfil do cliente leva em consideração o históri
 
 Para a frequência e valor investido, existem 3 faixas que vão receber o valor propocional dentro de sua faixa. 
 
-O valor de cada peso e suas faixas, pode, ser configurado alterando as variáveis de ambientes, e estão disponíveis na tabela a baixo:
+O valor de cada peso e suas faixas, pode ser configurado alterando as variáveis de ambientes, e estão disponíveis na tabela a baixo:
 
 | Nome        | Descrição                                            | Intervalo  |  Peso(Valor padrão) |
 |-------------|------------------------------------------------------|------------|---------------------|
@@ -275,7 +275,7 @@ O valor de cada peso e suas faixas, pode, ser configurado alterando as variávei
 
 Exemplo de um cáculo:
 
-Um cliente que tem 3 investimento de risco Alto, cada um com  R$ 10.000 investido, vai ter o seguinte cálculo de pontuação:
+Um cliente que tem 3 investimentos de risco Alto, cada um com  R$ 10.000 investido, vai ter o seguinte cálculo de pontuação:
 ```
 Média de risco: (3 + 3 + 3 / 3) => 3
 Frequência: 3
@@ -334,7 +334,7 @@ Se quiser pode configurar novos pesos e novas faixas de pontuação, criando as 
 
 # 👨‍💼 Recomendação de produto
 
-O motor de recomendações, utiliza o mesmo cálculo de perfil, ele recupera o identificador do cliente e calcula o seu perfil, e procuta por um produto segundo o perfil passado.
+O motor de recomendações utiliza o mesmo cálculo de perfil. Ele recupera o identificador do cliente e calcula o seu perfil e procura por um produto segundo o perfil passado.
 
 Exemplo:
 ```
@@ -568,7 +568,7 @@ spec:
 
 ## 📁 Definições técnicas
 
-Este projeto foi construído usando a [arquitetura em camadas](https://www.baeldung.com/cs/layered-architecture), é uma arquitetura de fácil entendimento o que possibilidade um desenvolvimento rápido e ágil. O seu principal conceito é dividir as responsabilidades em camadas bem definidas.
+Este projeto foi construído usando a [arquitetura em camadas](https://www.baeldung.com/cs/layered-architecture). Ela é uma arquitetura de fácil entendimento o que possibilita um desenvolvimento rápido e ágil. O seu principal conceito é dividir as responsabilidades em camadas bem definidas.
 ```
 src/
 ├── exceptions/ # Contém todas as exceções que o projeto lançará
