@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
+import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
@@ -26,7 +26,7 @@ public class MotorDePerfilService {
     SimulacaoPersistance simulacaoPersistance;
 
     @Inject
-    ProdutoRepository produtoRepository;
+    ProdutoPersistance produtoPersistance;
 
     @Inject
     UsuariosRepository usuariosRepository;
@@ -95,7 +95,7 @@ public class MotorDePerfilService {
     }
 
     private Map<String, String> getProdutoRisco() {
-        var produtos = produtoRepository.listAll();
+        var produtos = produtoPersistance.listAll();
         return produtos.stream()
             .collect(Collectors.toMap(ProdutoModel::getCo_nome, ProdutoModel::getIc_risco));
     }

@@ -2,8 +2,8 @@ package br.gov.caixa.caixaverso.integracao;
 
 import org.junit.jupiter.api.Test;
 
+import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.profile.TesteProfile;
-import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
@@ -23,7 +23,7 @@ class SimulacaoRestTest {
     UsuariosRepository usuariosRepository;
 
     @Inject
-    ProdutoRepository produtoRepository;
+    ProdutoPersistance produtoPersistance;
 
     UsuarioModel usuarioModel;
 
@@ -44,14 +44,14 @@ class SimulacaoRestTest {
     void setupSimular() {
         setupUsuario();
 
-        var prod = produtoRepository.findByTipo(tipo);
+        var prod = produtoPersistance.findByTipo(tipo);
         if (prod == null) {
             ProdutoModel produtoModel = new ProdutoModel();
             produtoModel.setCo_nome("Teste");;
             produtoModel.setIc_risco("baixo");
             produtoModel.setIc_tipo(tipo);
             produtoModel.setNu_rentabilidade((float) 0.12);
-            produtoRepository.persist(produtoModel);
+            produtoModel.persist();
         }
     }
 

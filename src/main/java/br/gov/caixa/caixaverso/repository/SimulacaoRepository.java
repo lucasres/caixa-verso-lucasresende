@@ -47,7 +47,7 @@ public class SimulacaoRepository implements PanacheRepository<SimulacoesModel>, 
     } 
 
     public ResultadoPaginadoDTO<SimulacoesModel> listarByClienteIdPaginado(Long clienteId, int pagina, int quantidade) {
-        var query = find("co_usuario_id = ?1 ORDER BY co_id ASC", clienteId);
+        var query = find("co_usuario_id = ?1", clienteId);
         query.page(pagina, quantidade);
 
         var queryCount = getEntityManager().createNamedQuery("quantidadeDeSimulacoesCliente", Long.class);

@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.jboss.logging.Logger;
 
+import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.services.Enum.PerfilEnum;
 import io.quarkus.cache.CacheResult;
@@ -23,7 +23,7 @@ public class MotorDeRecomendacaoService {
     Logger logger = Logger.getLogger(MotorDeRecomendacaoService.class);
 
     @Inject
-    ProdutoRepository produtoRepository;
+    ProdutoPersistance produtoPersistance;
 
     @Inject
     MotorDePerfilService motorDePerfilService;
@@ -64,7 +64,7 @@ public class MotorDeRecomendacaoService {
             riscosAceitados.add(perfilRisco.get(perfilCliente.perfil()));
         }
 
-        Set<ProdutoModel> recomendacoes = produtoRepository.findByRiscos(riscosAceitados);
+        Set<ProdutoModel> recomendacoes = produtoPersistance.findByRiscos(riscosAceitados);
 
         if (flagMaiorRendimento) {
             addProdutoMaiorRendimento(recomendacoes);
@@ -93,13 +93,12 @@ public class MotorDeRecomendacaoService {
 
     @CacheResult(cacheName = "allProdutos")
     public PanacheQuery<ProdutoModel> getAllProdutos() {
-        return produtoRepository.findAll();
+        return produtoPersistance.findAll();
     }
 
     @CacheResult(cacheName = "maiorRendimento")
     public ProdutoModel getProdutoMaiorRendimento() {
-        return getAllProdutos()
-            .stream()
+        return getAllProdutos().stream()
             .max(Comparator.comparing(ProdutoModel::getNu_rentabilidade))
             .orElse(null);
     }

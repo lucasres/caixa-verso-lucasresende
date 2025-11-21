@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
@@ -29,7 +29,7 @@ public class CriarSimulacaoService {
     Logger logger = Logger.getLogger(CriarSimulacaoService.class);
 
     @Inject
-    ProdutoRepository produtoRepository;
+    ProdutoPersistance produtoPersistance;
 
     @Inject
     UsuariosRepository usuariosRepository;
@@ -41,7 +41,7 @@ public class CriarSimulacaoService {
     public SimulacaoDTO executar(SimulacaoRequestDTO dados) throws RegraInvalidaException {
         logger.infof("iniciando simulação cliente: %d", dados.clienteId());
 
-        ProdutoModel produto = produtoRepository.findByTipo(dados.tipoProduto());
+        ProdutoModel produto = produtoPersistance.findByTipo(dados.tipoProduto());
         if (produto == null) {
             throw new RegraInvalidaException("Produto do tipo '" + dados.tipoProduto() + "' não existe na base");
         }

@@ -8,11 +8,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.integracao.BaseTeste;
 import br.gov.caixa.caixaverso.profile.TesteProfile;
-import br.gov.caixa.caixaverso.repository.ProdutoRepository;
 import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
@@ -33,7 +33,7 @@ public class MotorPerfilServiceTest extends BaseTeste {
     SimulacaoPersistance simulacaoPersistance;
 
     @InjectMock
-    ProdutoRepository produtoRepository;
+    ProdutoPersistance produtoPersistance;
 
     @InjectMock
     UsuariosRepository usuariosRepository;
@@ -61,7 +61,7 @@ public class MotorPerfilServiceTest extends BaseTeste {
         produtoModel.setIc_tipo("Investimento");
         produtoModel.setNu_rentabilidade(0.5f);
 
-        Mockito.when(produtoRepository.listAll()).thenReturn(
+        Mockito.when(produtoPersistance.listAll()).thenReturn(
             List.of(produtoModel)
         );
 

@@ -20,7 +20,7 @@ VALUES(
 'Poupançudo Caixa 2026',
 'Baixo',
 'Poupanca',
-0.6,
+0.06,
 '2025-11-01',
 '1 Dia Útil');
 
