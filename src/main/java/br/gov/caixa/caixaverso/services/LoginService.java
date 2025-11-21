@@ -7,8 +7,8 @@ import java.util.HashSet;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.services.dto.LoginDTO;
 import io.smallrye.jwt.build.Jwt;
@@ -18,10 +18,10 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class LoginService {
     @Inject
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
 
     public LoginDTO executar(String cpf, String pass) throws RegraInvalidaException {
-        UsuarioModel usuario = usuariosRepository.findUsuarioByCpf(cpf);
+        UsuarioModel usuario = usuarioPersistance.findUsuarioByCpf(cpf);
 
         if (usuario == null || !validarPassword(usuario, pass)) {
             throw new RegraInvalidaException("Usuário ou senha inválida");

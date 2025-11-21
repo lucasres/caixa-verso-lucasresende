@@ -5,8 +5,8 @@ import java.util.HashSet;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.services.dto.LoginDTO;
 import io.smallrye.jwt.build.Jwt;
@@ -16,10 +16,10 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class RegistroService {
     @Inject
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
 
     public LoginDTO executar(String cpf, String pass, String nome) throws RegraInvalidaException {
-        UsuarioModel usuarioExistente = usuariosRepository.findUsuarioByCpf(cpf);
+        UsuarioModel usuarioExistente = usuarioPersistance.findUsuarioByCpf(cpf);
 
         if (usuarioExistente != null) {
             throw new RegraInvalidaException("CPF '" +  cpf  + "' já cadastrado");
@@ -30,7 +30,7 @@ public class RegistroService {
         model.setNo_password(BCrypt.hashpw(pass, BCrypt.gensalt()));
         model.setNo_nome(nome);
 
-        usuariosRepository.inserir(model);
+        usuarioPersistance.inserir(model);
 
         
         String token = Jwt.issuer("https://example.com/issuer") 

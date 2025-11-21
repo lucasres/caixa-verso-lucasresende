@@ -3,8 +3,8 @@ package br.gov.caixa.caixaverso.integracao;
 import org.junit.jupiter.api.Test;
 
 import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.profile.TesteProfile;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.rest.dto.SimulacaoRequestDTO;
@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.MediaType;
 @TestProfile(TesteProfile.class)
 class SimulacaoRestTest {
     @Inject
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
 
     @Inject
     ProdutoPersistance produtoPersistance;
@@ -36,7 +36,7 @@ class SimulacaoRestTest {
         usuarioModel.setNo_nome("LucasBB");
         usuarioModel.setNo_password("$2a$12$Rh7E23fds4OVwc38g7joQse.1wF/e5LDRa6yWXDIKmUykiRn/6Wjfy");
 
-        usuariosRepository.inserir(usuarioModel);
+        usuarioPersistance.inserir(usuarioModel);
         this.usuarioModel = usuarioModel;
     }
 

@@ -8,8 +8,8 @@ import org.jboss.logging.Logger;
 
 import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
@@ -29,7 +29,7 @@ public class MotorDePerfilService {
     ProdutoPersistance produtoPersistance;
 
     @Inject
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
 
     @Inject
     Logger logger = Logger.getLogger(MotorDePerfilService.class);
@@ -61,7 +61,7 @@ public class MotorDePerfilService {
 
     @CacheResult(cacheName = "cliente-", keyGenerator = CacheKeyGeneratorPerfilClient.class)
     public PerfilClienteDTO executar(Long clienteId) throws RegraInvalidaException {
-        UsuarioModel has = usuariosRepository.findById(clienteId);
+        UsuarioModel has = usuarioPersistance.findById(clienteId);
         if (has == null) {
             throw new RegraInvalidaException("Usuário com o id '" + clienteId + "' não foi encontrado na base");
         }

@@ -10,10 +10,10 @@ import org.mockito.Mockito;
 
 import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
 import br.gov.caixa.caixaverso.integracao.BaseTeste;
 import br.gov.caixa.caixaverso.profile.TesteProfile;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import br.gov.caixa.caixaverso.services.MotorDePerfilService;
@@ -36,14 +36,14 @@ public class MotorPerfilServiceTest extends BaseTeste {
     ProdutoPersistance produtoPersistance;
 
     @InjectMock
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
 
     @Test
     void test_Perfil_Agressivo() throws RegraInvalidaException {
         UsuarioModel usuarioModel = new UsuarioModel();
         usuarioModel.setCo_id(1);
 
-        Mockito.when(usuariosRepository.findById(1L)).thenReturn(usuarioModel);
+        Mockito.when(usuarioPersistance.findById(1L)).thenReturn(usuarioModel);
         
         Mockito.when(simulacaoPersistance.listarByClienteId(1L)).thenReturn(
             List.of(

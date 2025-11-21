@@ -7,8 +7,8 @@ import org.jboss.logging.Logger;
 
 import br.gov.caixa.caixaverso.contracts.ProdutoPersistance;
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.exceptions.RegraInvalidaException;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
 import br.gov.caixa.caixaverso.repository.model.ProdutoModel;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
@@ -32,7 +32,7 @@ public class CriarSimulacaoService {
     ProdutoPersistance produtoPersistance;
 
     @Inject
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
 
     @Inject
     SimulacaoPersistance simulacaoPersistance;
@@ -46,7 +46,7 @@ public class CriarSimulacaoService {
             throw new RegraInvalidaException("Produto do tipo '" + dados.tipoProduto() + "' não existe na base");
         }
 
-        UsuarioModel usuario = usuariosRepository.findById(dados.clienteId());
+        UsuarioModel usuario = usuarioPersistance.findById(dados.clienteId());
         if (usuario == null) {
             throw new RegraInvalidaException("Cliente '" + dados.clienteId() + "' não existe na base");
         }

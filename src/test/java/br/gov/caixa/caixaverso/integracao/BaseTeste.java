@@ -6,7 +6,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.mockito.Mockito;
 
 import br.gov.caixa.caixaverso.contracts.SimulacaoPersistance;
-import br.gov.caixa.caixaverso.repository.UsuariosRepository;
+import br.gov.caixa.caixaverso.contracts.UsuarioPersistance;
 import br.gov.caixa.caixaverso.repository.model.SimulacoesModel;
 import br.gov.caixa.caixaverso.repository.model.UsuarioModel;
 import io.quarkus.test.InjectMock;
@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 
 public class BaseTeste {
     @Inject
-    UsuariosRepository usuariosRepository;
+    UsuarioPersistance usuarioPersistance;
     
     @Inject
     SimulacaoPersistance simulacaoPersistance;
@@ -32,7 +32,7 @@ public class BaseTeste {
         usuarioModel.setNo_nome("AAAABBB");
         usuarioModel.setNo_password("$2a$12$Rh7EcQ3p4OVwc38g7joQse.231/e5LDRa6yWXDIKmUykiRn/6Wjfy");
 
-        usuariosRepository.inserir(usuarioModel);
+        usuarioPersistance.inserir(usuarioModel);
         this.usuarioModel = usuarioModel;
 
         Mockito.when(jwt.getClaim("clienteId")).thenReturn(usuarioModel.getCo_id());
